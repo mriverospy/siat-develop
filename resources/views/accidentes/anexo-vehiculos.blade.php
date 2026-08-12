@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Formulario Único, Datos del Sistema de Información de Accidentes de Tránsito</title>
+    <style type="text/css">
+        * { font-family: Arial, sans-serif; }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            font-weight: normal;
+            /*margin: 0 auto;*/
+            /*width: 700px;*/
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-right {
+            text-align: right;
+        }
+        h1 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 0;
+            color: red;
+        }
+        h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+        h3 {
+            font-size: 18px;
+            font-weight: bold;
+            border: 3px solid #0088cb;
+            padding: 5px;
+        }
+        .no-break {
+            page-break-inside: avoid;
+        }
+        table {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        table.bordered {
+            border: 2px solid #808080;
+        }
+        table.row {
+            margin-bottom: 5px;
+        }
+        th {
+            font-weight: bold;
+            vertical-align: top;
+            background-color: #d6dce4;
+            color: #44546a;
+        }
+        td {
+            vertical-align: top;
+        }
+        td.col-key {
+            font-weight: bold;
+        }
+        td.subcol-key {
+            border-bottom: 1px solid #ededed;
+        }
+        td.col-value {
+
+        }
+        td.col-underline {
+            border-bottom: 1px solid #333;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
+</head>
+<body>
+    <p class="text-center">
+        <img src="{{ public_path($logo_membrete) }}" alt="Cabecera PDF" />
+    </p>
+    <br>
+    @foreach(range(1, 3) as $_range)
+    @foreach($filas as $fila)
+    <table class="row">
+        <tr>
+            <th style="border-bottom: 2px solid #808080;">{{ $fila['nombre'] }}</th>
+        </tr>
+        <tr>
+            <td>
+                @foreach($fila['rows'] as $row)
+                    <?php
+                        $col_width = round(100 / $row['colCount']);
+                    ?>
+                <table class="no-break">
+                    <tr>
+                    @foreach($row['cols'] as $col)
+                        <td style="width: {{ $col_width }}%; text-align: left; font-weight: bold; border-bottom: 1px solid black;">
+                            {{ $col['pregunta'] }} <small>(Cód. {{ $col['id'] }})</small>
+                        </td>
+                    @endforeach
+                    </tr>
+                    <tr>
+                    @foreach($row['cols'] as $col)
+                        <td style="width: {{ $col_width }}%; text-align: left;">
+                            @if ($col['tipo'] == 'check')
+                                @foreach ($col['opciones'] as $opcion)
+                                    <img src="{{ public_path('img/formulario_unico/checkbox_off.gif') }}" alt="" /> {{ $opcion }} {!! $separador_opciones !!}
+                                @endforeach
+                                @if ($col['mostrar_otro'])
+                                <br />
+                                {{ trim($col['mostrar_otro']) == '' ? 'Otro' : $col['titulo_otro'] }}: _______________
+                                @endif
+                            @elseif ($col['tipo'] == 'radio')
+                                @foreach ($col['opciones'] as $opcion)
+                                    <img src="{{ public_path('img/formulario_unico/radio_off.gif') }}" alt="" /> {{ $opcion }} {!! $separador_opciones !!}
+                                @endforeach
+                                @if ($col['mostrar_otro'])
+                                <br />
+                                {{ trim($col['mostrar_otro']) == '' ? 'Otro' : $col['titulo_otro'] }}: _______________
+                                @endif
+                            @else
+                            ________________
+                            @endif
+                        </td>
+                    @endforeach
+                    </tr>
+                </table>
+                @endforeach
+            </td>
+        </tr>
+    </table>
+    @endforeach
+    @endforeach
+</body>
+</html>
