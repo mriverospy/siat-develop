@@ -239,29 +239,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            {!! Form::label('tipo_camino', 'Tipo Camino:', ['class' => 'col-sm-2 control-label']) !!}
-                            <div class="col-sm-8">
-                                <label class="radio-inline icheck">
-                                    {!! Form::radio('tipo_camino', 'calle', ($params['accidente']->tipo_camino == 'calle'), ['id' => 'tipo_camino_calle']) !!} Calle
-                                </label>
-                                <label class="radio-inline icheck">
-                                    {!! Form::radio('tipo_camino', 'ruta', ($params['accidente']->tipo_camino == 'ruta'), ['id' => 'tipo_camino_ruta']) !!} Ruta
-                                </label>
-                                <label class="radio-inline icheck">
-                                    {!! Form::radio('tipo_camino', 'avenida', ($params['accidente']->tipo_camino == 'avenida'), ['id' => 'tipo_camino_avenida']) !!} Avenida
-                                </label>
-                                <label class="radio-inline icheck">
-                                    {!! Form::radio('tipo_camino', 'ramal', ($params['accidente']->tipo_camino == 'ramal'), ['id' => 'tipo_camino_ramal']) !!} Ramal
-                                </label>
-                                <label class="radio-inline icheck">
-                                    {!! Form::radio('tipo_camino', 'camino_vecinal', ($params['accidente']->tipo_camino == 'camino_vecinal'), ['id' => 'tipo_camino_camino_vecinal']) !!} Camino Vecinal
-                                </label>
-                                <label class="radio-inline icheck">
-                                    {!! Form::radio('tipo_camino', 'interseccion', ($params['accidente']->tipo_camino == 'interseccion'), ['id' => 'tipo_camino_interseccion']) !!} Intersección
-                                </label>
-                            </div>
-                        </div>
+                        @include('accidentes.partials.via-area', ['accidenteActual' => $params['accidente']])
 
                         <div class="form-group">
                             {!! Form::label('localidad', 'Localidad:', ['class' => 'col-sm-2 control-label']) !!}
@@ -407,7 +385,7 @@
 
 @section('after-app-javascript')
     @parent
-    <script src="{{ asset('js/editar_accidente.js') }}"></script>
+    <script src="{{ asset('js/editar_accidente.js?id=form70-2026') }}"></script>
 @endsection
 
 @section('footer-javascript')

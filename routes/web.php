@@ -102,6 +102,8 @@ Route::middleware('auth')->group(function () {
         Route::get('accidentes/busqueda-por-indicadores', [AccidentesController::class, 'busquedaPorIndicadores'])->name('accidentes.busqueda-por-indicadores');
         Route::post('accidentes/filtrar-por-indicadores', [AccidentesController::class, 'filtrarPorIndicadores'])->name('accidentes.filtrar-por-indicadores');
         Route::get('accidentes/get-opciones', [AccidentesController::class, 'getOpciones'])->name('accidentes.get-opciones');
+        Route::get('accidentes/geografia/departamentos/{departamento}', [\App\Http\Controllers\GeografiaAccidenteController::class, 'departamento']);
+        Route::get('accidentes/geografia/distritos/{distrito}', [\App\Http\Controllers\GeografiaAccidenteController::class, 'distrito']);
         Route::get('accidentes/distritos/{departamento}', [AccidentesController::class, 'distritos']);
         Route::get('accidentes/localidades/{distrito}', [AccidentesController::class, 'localidades']);
         Route::get('accidentes/{accidentes}/editar', [AccidentesController::class, 'editarAccidente'])->name('accidentes.editar');

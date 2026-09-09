@@ -21,6 +21,7 @@ elixir.config.js.browserify.watchify = {
  */
 
 elixir(function(mix) {
+    mix.scripts(['./resources/js/mapa_accidente.js'], './public/js/mapa_accidente.js');
     mix.browserify('reportes.js');
     mix.browserify('reportes-builder.js');
     mix.browserify('reporte-datos-builder.js');

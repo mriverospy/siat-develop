@@ -1,0 +1,1642 @@
+{
+  "fuente": "INE, Cartografía Censal 2022",
+  "sha256_origen": "b6b3985f233d4cb172a9d2ac08dfb949d6fc98c0eb0d380a1b5ad6d13df84789",
+  "departamentos": {
+    "1": {
+      "id": 1,
+      "nombre": "Asuncion",
+      "codigo_ine": "00"
+    },
+    "2": {
+      "id": 2,
+      "nombre": "Concepcion",
+      "codigo_ine": "01"
+    },
+    "3": {
+      "id": 3,
+      "nombre": "San Pedro",
+      "codigo_ine": "02"
+    },
+    "4": {
+      "id": 4,
+      "nombre": "Cordillera",
+      "codigo_ine": "03"
+    },
+    "5": {
+      "id": 5,
+      "nombre": "Guaira",
+      "codigo_ine": "04"
+    },
+    "6": {
+      "id": 6,
+      "nombre": "Caaguazu",
+      "codigo_ine": "05"
+    },
+    "7": {
+      "id": 7,
+      "nombre": "Caazapa",
+      "codigo_ine": "06"
+    },
+    "8": {
+      "id": 8,
+      "nombre": "Itapua",
+      "codigo_ine": "07"
+    },
+    "9": {
+      "id": 9,
+      "nombre": "Misiones",
+      "codigo_ine": "08"
+    },
+    "10": {
+      "id": 10,
+      "nombre": "Paraguari",
+      "codigo_ine": "09"
+    },
+    "11": {
+      "id": 11,
+      "nombre": "Alto Parana",
+      "codigo_ine": "10"
+    },
+    "12": {
+      "id": 12,
+      "nombre": "Central",
+      "codigo_ine": "11"
+    },
+    "13": {
+      "id": 13,
+      "nombre": "Ñeembucu",
+      "codigo_ine": "12"
+    },
+    "14": {
+      "id": 14,
+      "nombre": "Amambay",
+      "codigo_ine": "13"
+    },
+    "15": {
+      "id": 15,
+      "nombre": "Canindeyu",
+      "codigo_ine": "14"
+    },
+    "16": {
+      "id": 16,
+      "nombre": "Presidente Hayes",
+      "codigo_ine": "15"
+    },
+    "17": {
+      "id": 17,
+      "nombre": "Boqueron",
+      "codigo_ine": "16"
+    },
+    "18": {
+      "id": 18,
+      "nombre": "Alto Paraguay",
+      "codigo_ine": "17"
+    }
+  },
+  "distritos": {
+    "1": {
+      "id": 1,
+      "nombre": "Asuncion",
+      "departamento_id": 1,
+      "codigo_ine": "0000"
+    },
+    "2": {
+      "id": 2,
+      "nombre": "Concepcion",
+      "departamento_id": 2,
+      "codigo_ine": "0101"
+    },
+    "3": {
+      "id": 3,
+      "nombre": "Belen",
+      "departamento_id": 2,
+      "codigo_ine": "0102"
+    },
+    "4": {
+      "id": 4,
+      "nombre": "Horqueta",
+      "departamento_id": 2,
+      "codigo_ine": "0103"
+    },
+    "5": {
+      "id": 5,
+      "nombre": "Loreto",
+      "departamento_id": 2,
+      "codigo_ine": "0104"
+    },
+    "6": {
+      "id": 6,
+      "nombre": "San Carlos",
+      "departamento_id": 2,
+      "codigo_ine": "0105"
+    },
+    "7": {
+      "id": 7,
+      "nombre": "San Lazaro",
+      "departamento_id": 2,
+      "codigo_ine": "0106"
+    },
+    "8": {
+      "id": 8,
+      "nombre": "Yvy Ya'u",
+      "departamento_id": 2,
+      "codigo_ine": "0107"
+    },
+    "9": {
+      "id": 9,
+      "nombre": "Yby Yau",
+      "departamento_id": 2,
+      "codigo_ine": "0107"
+    },
+    "10": {
+      "id": 10,
+      "nombre": "Yvy Ya'u",
+      "departamento_id": 2,
+      "codigo_ine": "0107"
+    },
+    "11": {
+      "id": 11,
+      "nombre": "Azotey",
+      "departamento_id": 2,
+      "codigo_ine": "0108"
+    },
+    "12": {
+      "id": 12,
+      "nombre": "Sgto. Jose Feliz Lopez",
+      "departamento_id": 2,
+      "codigo_ine": "0109"
+    },
+    "13": {
+      "id": 13,
+      "nombre": "San Alfredo",
+      "departamento_id": 2,
+      "codigo_ine": "0110"
+    },
+    "14": {
+      "id": 14,
+      "nombre": "Paso Barreto",
+      "departamento_id": 2,
+      "codigo_ine": "0111"
+    },
+    "16": {
+      "id": 16,
+      "nombre": "San Pedro del Ycuamandiyu",
+      "departamento_id": 3,
+      "codigo_ine": "0201"
+    },
+    "17": {
+      "id": 17,
+      "nombre": "Antequera",
+      "departamento_id": 3,
+      "codigo_ine": "0202"
+    },
+    "18": {
+      "id": 18,
+      "nombre": "Chore",
+      "departamento_id": 3,
+      "codigo_ine": "0203"
+    },
+    "19": {
+      "id": 19,
+      "nombre": "Gral. Elizardo Aquino",
+      "departamento_id": 3,
+      "codigo_ine": "0204"
+    },
+    "20": {
+      "id": 20,
+      "nombre": "Itacurubi del Rosario",
+      "departamento_id": 3,
+      "codigo_ine": "0205"
+    },
+    "21": {
+      "id": 21,
+      "nombre": "Lima",
+      "departamento_id": 3,
+      "codigo_ine": "0206"
+    },
+    "22": {
+      "id": 22,
+      "nombre": "Nueva Germania",
+      "departamento_id": 3,
+      "codigo_ine": "0207"
+    },
+    "23": {
+      "id": 23,
+      "nombre": "San Estanislao",
+      "departamento_id": 3,
+      "codigo_ine": "0208"
+    },
+    "24": {
+      "id": 24,
+      "nombre": "San Pablo",
+      "departamento_id": 3,
+      "codigo_ine": "0209"
+    },
+    "25": {
+      "id": 25,
+      "nombre": "Tacuati",
+      "departamento_id": 3,
+      "codigo_ine": "0210"
+    },
+    "26": {
+      "id": 26,
+      "nombre": "Union",
+      "departamento_id": 3,
+      "codigo_ine": "0211"
+    },
+    "27": {
+      "id": 27,
+      "nombre": "25 de Diciembre",
+      "departamento_id": 3,
+      "codigo_ine": "0212"
+    },
+    "28": {
+      "id": 28,
+      "nombre": "Villa del Rosario",
+      "departamento_id": 3,
+      "codigo_ine": "0213"
+    },
+    "29": {
+      "id": 29,
+      "nombre": "Gral. Resquin",
+      "departamento_id": 3,
+      "codigo_ine": "0214"
+    },
+    "30": {
+      "id": 30,
+      "nombre": "Yataity del Norte",
+      "departamento_id": 3,
+      "codigo_ine": "0215"
+    },
+    "31": {
+      "id": 31,
+      "nombre": "Guayaibi",
+      "departamento_id": 3,
+      "codigo_ine": "0216"
+    },
+    "32": {
+      "id": 32,
+      "nombre": "Capiibary",
+      "departamento_id": 3,
+      "codigo_ine": "0217"
+    },
+    "33": {
+      "id": 33,
+      "nombre": "Santa Rosa del Aguaray",
+      "departamento_id": 3,
+      "codigo_ine": "0218"
+    },
+    "34": {
+      "id": 34,
+      "nombre": "Yryvu Cua",
+      "departamento_id": 3,
+      "codigo_ine": "0219"
+    },
+    "35": {
+      "id": 35,
+      "nombre": "Liberacion",
+      "departamento_id": 3,
+      "codigo_ine": "0220"
+    },
+    "36": {
+      "id": 36,
+      "nombre": "Caacupe",
+      "departamento_id": 4,
+      "codigo_ine": "0301"
+    },
+    "37": {
+      "id": 37,
+      "nombre": "Altos",
+      "departamento_id": 4,
+      "codigo_ine": "0302"
+    },
+    "38": {
+      "id": 38,
+      "nombre": "Arroyos y Esteros",
+      "departamento_id": 4,
+      "codigo_ine": "0303"
+    },
+    "39": {
+      "id": 39,
+      "nombre": "Atyra",
+      "departamento_id": 4,
+      "codigo_ine": "0304"
+    },
+    "40": {
+      "id": 40,
+      "nombre": "Caraguatay",
+      "departamento_id": 4,
+      "codigo_ine": "0305"
+    },
+    "41": {
+      "id": 41,
+      "nombre": "Emboscada",
+      "departamento_id": 4,
+      "codigo_ine": "0306"
+    },
+    "42": {
+      "id": 42,
+      "nombre": "Eusebio Ayala",
+      "departamento_id": 4,
+      "codigo_ine": "0307"
+    },
+    "43": {
+      "id": 43,
+      "nombre": "Isla Pucu",
+      "departamento_id": 4,
+      "codigo_ine": "0308"
+    },
+    "44": {
+      "id": 44,
+      "nombre": "Itacurubi de la Cordillera",
+      "departamento_id": 4,
+      "codigo_ine": "0309"
+    },
+    "45": {
+      "id": 45,
+      "nombre": "Juan de Mena",
+      "departamento_id": 4,
+      "codigo_ine": "0310"
+    },
+    "46": {
+      "id": 46,
+      "nombre": "Loma Grande",
+      "departamento_id": 4,
+      "codigo_ine": "0311"
+    },
+    "47": {
+      "id": 47,
+      "nombre": "Mbocayaty del Yhaguy",
+      "departamento_id": 4,
+      "codigo_ine": "0312"
+    },
+    "48": {
+      "id": 48,
+      "nombre": "Nueva Colombia",
+      "departamento_id": 4,
+      "codigo_ine": "0313"
+    },
+    "49": {
+      "id": 49,
+      "nombre": "Piribebuy",
+      "departamento_id": 4,
+      "codigo_ine": "0314"
+    },
+    "50": {
+      "id": 50,
+      "nombre": "Primero de Marzo",
+      "departamento_id": 4,
+      "codigo_ine": "0315"
+    },
+    "51": {
+      "id": 51,
+      "nombre": "San Bernardino",
+      "departamento_id": 4,
+      "codigo_ine": "0316"
+    },
+    "52": {
+      "id": 52,
+      "nombre": "Santa Elena",
+      "departamento_id": 4,
+      "codigo_ine": "0317"
+    },
+    "53": {
+      "id": 53,
+      "nombre": "Tobati",
+      "departamento_id": 4,
+      "codigo_ine": "0318"
+    },
+    "54": {
+      "id": 54,
+      "nombre": "Valenzuela",
+      "departamento_id": 4,
+      "codigo_ine": "0319"
+    },
+    "55": {
+      "id": 55,
+      "nombre": "San Jose Obrero",
+      "departamento_id": 4,
+      "codigo_ine": "0320"
+    },
+    "56": {
+      "id": 56,
+      "nombre": "Villarrica",
+      "departamento_id": 5,
+      "codigo_ine": "0401"
+    },
+    "57": {
+      "id": 57,
+      "nombre": "Borja",
+      "departamento_id": 5,
+      "codigo_ine": "0402"
+    },
+    "58": {
+      "id": 58,
+      "nombre": "Mauricio Jose Troche",
+      "departamento_id": 5,
+      "codigo_ine": "0403"
+    },
+    "59": {
+      "id": 59,
+      "nombre": "Coronel Martinez",
+      "departamento_id": 5,
+      "codigo_ine": "0404"
+    },
+    "60": {
+      "id": 60,
+      "nombre": "Felix Perez Cardozo",
+      "departamento_id": 5,
+      "codigo_ine": "0405"
+    },
+    "61": {
+      "id": 61,
+      "nombre": "Gral. Eugenio A. Garay",
+      "departamento_id": 5,
+      "codigo_ine": "0406"
+    },
+    "62": {
+      "id": 62,
+      "nombre": "Colonia Independencia",
+      "departamento_id": 5,
+      "codigo_ine": "0407"
+    },
+    "63": {
+      "id": 63,
+      "nombre": "Itape",
+      "departamento_id": 5,
+      "codigo_ine": "0408"
+    },
+    "64": {
+      "id": 64,
+      "nombre": "Iturbe",
+      "departamento_id": 5,
+      "codigo_ine": "0409"
+    },
+    "65": {
+      "id": 65,
+      "nombre": "Jose Fassardi",
+      "departamento_id": 5,
+      "codigo_ine": "0410"
+    },
+    "66": {
+      "id": 66,
+      "nombre": "Mbocayaty",
+      "departamento_id": 5,
+      "codigo_ine": "0411"
+    },
+    "67": {
+      "id": 67,
+      "nombre": "Natalicio Talavera",
+      "departamento_id": 5,
+      "codigo_ine": "0412"
+    },
+    "68": {
+      "id": 68,
+      "nombre": "Ñumi",
+      "departamento_id": 5,
+      "codigo_ine": "0413"
+    },
+    "69": {
+      "id": 69,
+      "nombre": "San Salvador",
+      "departamento_id": 5,
+      "codigo_ine": "0414"
+    },
+    "70": {
+      "id": 70,
+      "nombre": "Yataity",
+      "departamento_id": 5,
+      "codigo_ine": "0415"
+    },
+    "71": {
+      "id": 71,
+      "nombre": "Dr. Bottrell",
+      "departamento_id": 5,
+      "codigo_ine": "0416"
+    },
+    "72": {
+      "id": 72,
+      "nombre": "Paso Yobai",
+      "departamento_id": 5,
+      "codigo_ine": "0417"
+    },
+    "73": {
+      "id": 73,
+      "nombre": "Tebicuary",
+      "departamento_id": 5,
+      "codigo_ine": "0418"
+    },
+    "74": {
+      "id": 74,
+      "nombre": "Coronel Oviedo",
+      "departamento_id": 6,
+      "codigo_ine": "0501"
+    },
+    "75": {
+      "id": 75,
+      "nombre": "Caaguazu",
+      "departamento_id": 6,
+      "codigo_ine": "0502"
+    },
+    "76": {
+      "id": 76,
+      "nombre": "Carayao",
+      "departamento_id": 6,
+      "codigo_ine": "0503"
+    },
+    "77": {
+      "id": 77,
+      "nombre": "Cecilio Baez",
+      "departamento_id": 6,
+      "codigo_ine": "0504"
+    },
+    "78": {
+      "id": 78,
+      "nombre": "Santa Rosa del Mbutuy",
+      "departamento_id": 6,
+      "codigo_ine": "0505"
+    },
+    "79": {
+      "id": 79,
+      "nombre": "Dr. Juan Manuel Frutos",
+      "departamento_id": 6,
+      "codigo_ine": "0506"
+    },
+    "80": {
+      "id": 80,
+      "nombre": "Repatriacion",
+      "departamento_id": 6,
+      "codigo_ine": "0507"
+    },
+    "81": {
+      "id": 81,
+      "nombre": "Nueva Londres",
+      "departamento_id": 6,
+      "codigo_ine": "0508"
+    },
+    "82": {
+      "id": 82,
+      "nombre": "San Joaquin",
+      "departamento_id": 6,
+      "codigo_ine": "0509"
+    },
+    "83": {
+      "id": 83,
+      "nombre": "San Jose de los Arroyos",
+      "departamento_id": 6,
+      "codigo_ine": "0510"
+    },
+    "84": {
+      "id": 84,
+      "nombre": "Yhu",
+      "departamento_id": 6,
+      "codigo_ine": "0511"
+    },
+    "85": {
+      "id": 85,
+      "nombre": "Dr. J. Eulogio Estigarribia",
+      "departamento_id": 6,
+      "codigo_ine": "0512"
+    },
+    "86": {
+      "id": 86,
+      "nombre": "R.I. 3 Corrales",
+      "departamento_id": 6,
+      "codigo_ine": "0513"
+    },
+    "87": {
+      "id": 87,
+      "nombre": "Raul Arsenio Oviedo",
+      "departamento_id": 6,
+      "codigo_ine": "0514"
+    },
+    "88": {
+      "id": 88,
+      "nombre": "Jose Domingo Ocampos",
+      "departamento_id": 6,
+      "codigo_ine": "0515"
+    },
+    "89": {
+      "id": 89,
+      "nombre": "Mariscal Francisco Solano Lope",
+      "departamento_id": 6,
+      "codigo_ine": "0516"
+    },
+    "90": {
+      "id": 90,
+      "nombre": "La Pastora",
+      "departamento_id": 6,
+      "codigo_ine": "0517"
+    },
+    "91": {
+      "id": 91,
+      "nombre": "3 de Febrero",
+      "departamento_id": 6,
+      "codigo_ine": "0518"
+    },
+    "92": {
+      "id": 92,
+      "nombre": "Simon Bolivar",
+      "departamento_id": 6,
+      "codigo_ine": "0519"
+    },
+    "93": {
+      "id": 93,
+      "nombre": "Vaqueria",
+      "departamento_id": 6,
+      "codigo_ine": "0520"
+    },
+    "94": {
+      "id": 94,
+      "nombre": "Tembiapora",
+      "departamento_id": 6,
+      "codigo_ine": "0521"
+    },
+    "95": {
+      "id": 95,
+      "nombre": "Nueva Toledo",
+      "departamento_id": 6,
+      "codigo_ine": "0522"
+    },
+    "96": {
+      "id": 96,
+      "nombre": "Caazapa",
+      "departamento_id": 7,
+      "codigo_ine": "0601"
+    },
+    "97": {
+      "id": 97,
+      "nombre": "Abai",
+      "departamento_id": 7,
+      "codigo_ine": "0602"
+    },
+    "98": {
+      "id": 98,
+      "nombre": "Buena Vista",
+      "departamento_id": 7,
+      "codigo_ine": "0603"
+    },
+    "99": {
+      "id": 99,
+      "nombre": "Moises Bertoni",
+      "departamento_id": 7,
+      "codigo_ine": "0604"
+    },
+    "100": {
+      "id": 100,
+      "nombre": "Gral. Higinio Morinigo",
+      "departamento_id": 7,
+      "codigo_ine": "0605"
+    },
+    "101": {
+      "id": 101,
+      "nombre": "Maciel",
+      "departamento_id": 7,
+      "codigo_ine": "0606"
+    },
+    "102": {
+      "id": 102,
+      "nombre": "San Juan Nepomuceno",
+      "departamento_id": 7,
+      "codigo_ine": "0607"
+    },
+    "103": {
+      "id": 103,
+      "nombre": "Tavai",
+      "departamento_id": 7,
+      "codigo_ine": "0608"
+    },
+    "104": {
+      "id": 104,
+      "nombre": "Fulgencio Yegros",
+      "departamento_id": 7,
+      "codigo_ine": "0609"
+    },
+    "105": {
+      "id": 105,
+      "nombre": "Yuty",
+      "departamento_id": 7,
+      "codigo_ine": "0610"
+    },
+    "106": {
+      "id": 106,
+      "nombre": "3 de Mayo",
+      "departamento_id": 7,
+      "codigo_ine": "0611"
+    },
+    "107": {
+      "id": 107,
+      "nombre": "Encarnacion",
+      "departamento_id": 8,
+      "codigo_ine": "0701"
+    },
+    "108": {
+      "id": 108,
+      "nombre": "Bella Vista",
+      "departamento_id": 8,
+      "codigo_ine": "0702"
+    },
+    "109": {
+      "id": 109,
+      "nombre": "Cambyreta",
+      "departamento_id": 8,
+      "codigo_ine": "0703"
+    },
+    "110": {
+      "id": 110,
+      "nombre": "Capitan Meza",
+      "departamento_id": 8,
+      "codigo_ine": "0704"
+    },
+    "111": {
+      "id": 111,
+      "nombre": "Capitan Miranda",
+      "departamento_id": 8,
+      "codigo_ine": "0705"
+    },
+    "112": {
+      "id": 112,
+      "nombre": "Nueva Alborada",
+      "departamento_id": 8,
+      "codigo_ine": "0706"
+    },
+    "113": {
+      "id": 113,
+      "nombre": "Carmen del Parana",
+      "departamento_id": 8,
+      "codigo_ine": "0707"
+    },
+    "114": {
+      "id": 114,
+      "nombre": "Coronel Bogado",
+      "departamento_id": 8,
+      "codigo_ine": "0708"
+    },
+    "115": {
+      "id": 115,
+      "nombre": "Carlos Antonio Lopez",
+      "departamento_id": 8,
+      "codigo_ine": "0709"
+    },
+    "116": {
+      "id": 116,
+      "nombre": "Natalio",
+      "departamento_id": 8,
+      "codigo_ine": "0710"
+    },
+    "117": {
+      "id": 117,
+      "nombre": "Fram",
+      "departamento_id": 8,
+      "codigo_ine": "0711"
+    },
+    "118": {
+      "id": 118,
+      "nombre": "General Artigas",
+      "departamento_id": 8,
+      "codigo_ine": "0712"
+    },
+    "119": {
+      "id": 119,
+      "nombre": "Gral. Delgado",
+      "departamento_id": 8,
+      "codigo_ine": "0713"
+    },
+    "120": {
+      "id": 120,
+      "nombre": "Hohenau",
+      "departamento_id": 8,
+      "codigo_ine": "0714"
+    },
+    "121": {
+      "id": 121,
+      "nombre": "Jesus",
+      "departamento_id": 8,
+      "codigo_ine": "0715"
+    },
+    "122": {
+      "id": 122,
+      "nombre": "Leandro Oviedo",
+      "departamento_id": 8,
+      "codigo_ine": "0716"
+    },
+    "123": {
+      "id": 123,
+      "nombre": "Obligado",
+      "departamento_id": 8,
+      "codigo_ine": "0717"
+    },
+    "124": {
+      "id": 124,
+      "nombre": "Mayor Otaño",
+      "departamento_id": 8,
+      "codigo_ine": "0718"
+    },
+    "125": {
+      "id": 125,
+      "nombre": "San Cosme y Damian",
+      "departamento_id": 8,
+      "codigo_ine": "0719"
+    },
+    "126": {
+      "id": 126,
+      "nombre": "San Pedro del Parana",
+      "departamento_id": 8,
+      "codigo_ine": "0720"
+    },
+    "127": {
+      "id": 127,
+      "nombre": "San Rafael del Parana",
+      "departamento_id": 8,
+      "codigo_ine": "0721"
+    },
+    "128": {
+      "id": 128,
+      "nombre": "Trinidad",
+      "departamento_id": 8,
+      "codigo_ine": "0722"
+    },
+    "129": {
+      "id": 129,
+      "nombre": "Edelira",
+      "departamento_id": 8,
+      "codigo_ine": "0723"
+    },
+    "130": {
+      "id": 130,
+      "nombre": "Tomas Romero Pereira",
+      "departamento_id": 8,
+      "codigo_ine": "0724"
+    },
+    "131": {
+      "id": 131,
+      "nombre": "Alto Vera",
+      "departamento_id": 8,
+      "codigo_ine": "0725"
+    },
+    "132": {
+      "id": 132,
+      "nombre": "La Paz",
+      "departamento_id": 8,
+      "codigo_ine": "0726"
+    },
+    "133": {
+      "id": 133,
+      "nombre": "Yatytay",
+      "departamento_id": 8,
+      "codigo_ine": "0727"
+    },
+    "134": {
+      "id": 134,
+      "nombre": "San Juan del Parana",
+      "departamento_id": 8,
+      "codigo_ine": "0728"
+    },
+    "135": {
+      "id": 135,
+      "nombre": "Pirapo",
+      "departamento_id": 8,
+      "codigo_ine": "0729"
+    },
+    "136": {
+      "id": 136,
+      "nombre": "Itapua Poty",
+      "departamento_id": 8,
+      "codigo_ine": "0730"
+    },
+    "137": {
+      "id": 137,
+      "nombre": "San Juan Bautista",
+      "departamento_id": 9,
+      "codigo_ine": "0801"
+    },
+    "138": {
+      "id": 138,
+      "nombre": "Ayolas",
+      "departamento_id": 9,
+      "codigo_ine": "0802"
+    },
+    "139": {
+      "id": 139,
+      "nombre": "San Ignacio",
+      "departamento_id": 9,
+      "codigo_ine": "0803"
+    },
+    "140": {
+      "id": 140,
+      "nombre": "San Miguel",
+      "departamento_id": 9,
+      "codigo_ine": "0804"
+    },
+    "141": {
+      "id": 141,
+      "nombre": "San Patricio",
+      "departamento_id": 9,
+      "codigo_ine": "0805"
+    },
+    "142": {
+      "id": 142,
+      "nombre": "Santa Maria",
+      "departamento_id": 9,
+      "codigo_ine": "0806"
+    },
+    "143": {
+      "id": 143,
+      "nombre": "Santa Rosa",
+      "departamento_id": 9,
+      "codigo_ine": "0807"
+    },
+    "144": {
+      "id": 144,
+      "nombre": "Santiago",
+      "departamento_id": 9,
+      "codigo_ine": "0808"
+    },
+    "145": {
+      "id": 145,
+      "nombre": "Villa Florida",
+      "departamento_id": 9,
+      "codigo_ine": "0809"
+    },
+    "146": {
+      "id": 146,
+      "nombre": "Yabebyry",
+      "departamento_id": 9,
+      "codigo_ine": "0810"
+    },
+    "147": {
+      "id": 147,
+      "nombre": "Paraguari",
+      "departamento_id": 10,
+      "codigo_ine": "0901"
+    },
+    "148": {
+      "id": 148,
+      "nombre": "Acahay",
+      "departamento_id": 10,
+      "codigo_ine": "0902"
+    },
+    "149": {
+      "id": 149,
+      "nombre": "Caapucu",
+      "departamento_id": 10,
+      "codigo_ine": "0903"
+    },
+    "150": {
+      "id": 150,
+      "nombre": "Gral. Bernardino Caballero",
+      "departamento_id": 10,
+      "codigo_ine": "0904"
+    },
+    "151": {
+      "id": 151,
+      "nombre": "Carapegua",
+      "departamento_id": 10,
+      "codigo_ine": "0905"
+    },
+    "152": {
+      "id": 152,
+      "nombre": "Escobar",
+      "departamento_id": 10,
+      "codigo_ine": "0906"
+    },
+    "153": {
+      "id": 153,
+      "nombre": "La Colmena",
+      "departamento_id": 10,
+      "codigo_ine": "0907"
+    },
+    "154": {
+      "id": 154,
+      "nombre": "Mbuyapey",
+      "departamento_id": 10,
+      "codigo_ine": "0908"
+    },
+    "155": {
+      "id": 155,
+      "nombre": "Pirayu",
+      "departamento_id": 10,
+      "codigo_ine": "0909"
+    },
+    "156": {
+      "id": 156,
+      "nombre": "Quiindy",
+      "departamento_id": 10,
+      "codigo_ine": "0910"
+    },
+    "157": {
+      "id": 157,
+      "nombre": "Quyquyho",
+      "departamento_id": 10,
+      "codigo_ine": "0911"
+    },
+    "158": {
+      "id": 158,
+      "nombre": "San Roque Gonzalez",
+      "departamento_id": 10,
+      "codigo_ine": "0912"
+    },
+    "159": {
+      "id": 159,
+      "nombre": "Sapucai",
+      "departamento_id": 10,
+      "codigo_ine": "0913"
+    },
+    "160": {
+      "id": 160,
+      "nombre": "Tebicuary-mi",
+      "departamento_id": 10,
+      "codigo_ine": "0914"
+    },
+    "161": {
+      "id": 161,
+      "nombre": "Yaguaron",
+      "departamento_id": 10,
+      "codigo_ine": "0915"
+    },
+    "162": {
+      "id": 162,
+      "nombre": "Ybycui",
+      "departamento_id": 10,
+      "codigo_ine": "0916"
+    },
+    "163": {
+      "id": 163,
+      "nombre": "Ybytymi",
+      "departamento_id": 10,
+      "codigo_ine": "0917"
+    },
+    "164": {
+      "id": 164,
+      "nombre": "Ciudad del Este",
+      "departamento_id": 11,
+      "codigo_ine": "1001"
+    },
+    "165": {
+      "id": 165,
+      "nombre": "Presidente Franco",
+      "departamento_id": 11,
+      "codigo_ine": "1002"
+    },
+    "166": {
+      "id": 166,
+      "nombre": "Domingo Martinez de Irala",
+      "departamento_id": 11,
+      "codigo_ine": "1003"
+    },
+    "167": {
+      "id": 167,
+      "nombre": "Dr. Juan Leon Mallorquin",
+      "departamento_id": 11,
+      "codigo_ine": "1004"
+    },
+    "168": {
+      "id": 168,
+      "nombre": "Hernandarias",
+      "departamento_id": 11,
+      "codigo_ine": "1005"
+    },
+    "169": {
+      "id": 169,
+      "nombre": "Itakyry",
+      "departamento_id": 11,
+      "codigo_ine": "1006"
+    },
+    "170": {
+      "id": 170,
+      "nombre": "Dr. Juan E. O'Leary",
+      "departamento_id": 11,
+      "codigo_ine": "1007"
+    },
+    "171": {
+      "id": 171,
+      "nombre": "Ñacunday",
+      "departamento_id": 11,
+      "codigo_ine": "1008"
+    },
+    "172": {
+      "id": 172,
+      "nombre": "Yguazu",
+      "departamento_id": 11,
+      "codigo_ine": "1009"
+    },
+    "173": {
+      "id": 173,
+      "nombre": "Los Cedrales",
+      "departamento_id": 11,
+      "codigo_ine": "1010"
+    },
+    "174": {
+      "id": 174,
+      "nombre": "Minga Guazu",
+      "departamento_id": 11,
+      "codigo_ine": "1011"
+    },
+    "175": {
+      "id": 175,
+      "nombre": "San Cristobal",
+      "departamento_id": 11,
+      "codigo_ine": "1012"
+    },
+    "176": {
+      "id": 176,
+      "nombre": "Santa Rita",
+      "departamento_id": 11,
+      "codigo_ine": "1013"
+    },
+    "177": {
+      "id": 177,
+      "nombre": "Naranjal",
+      "departamento_id": 11,
+      "codigo_ine": "1014"
+    },
+    "178": {
+      "id": 178,
+      "nombre": "Santa Rosa del Monday",
+      "departamento_id": 11,
+      "codigo_ine": "1015"
+    },
+    "179": {
+      "id": 179,
+      "nombre": "Minga Pora",
+      "departamento_id": 11,
+      "codigo_ine": "1016"
+    },
+    "180": {
+      "id": 180,
+      "nombre": "Mbaracayu",
+      "departamento_id": 11,
+      "codigo_ine": "1017"
+    },
+    "181": {
+      "id": 181,
+      "nombre": "San Alberto",
+      "departamento_id": 11,
+      "codigo_ine": "1018"
+    },
+    "182": {
+      "id": 182,
+      "nombre": "Iruña",
+      "departamento_id": 11,
+      "codigo_ine": "1019"
+    },
+    "183": {
+      "id": 183,
+      "nombre": "Santa Fe del Parana",
+      "departamento_id": 11,
+      "codigo_ine": "1020"
+    },
+    "184": {
+      "id": 184,
+      "nombre": "Tavapy",
+      "departamento_id": 11,
+      "codigo_ine": "1021"
+    },
+    "185": {
+      "id": 185,
+      "nombre": "Dr. Raul Peña",
+      "departamento_id": 11,
+      "codigo_ine": "1022"
+    },
+    "186": {
+      "id": 186,
+      "nombre": "Aregua",
+      "departamento_id": 12,
+      "codigo_ine": "1101"
+    },
+    "187": {
+      "id": 187,
+      "nombre": "Capiata",
+      "departamento_id": 12,
+      "codigo_ine": "1102"
+    },
+    "188": {
+      "id": 188,
+      "nombre": "Fernando de la Mora",
+      "departamento_id": 12,
+      "codigo_ine": "1103"
+    },
+    "189": {
+      "id": 189,
+      "nombre": "Guarambare",
+      "departamento_id": 12,
+      "codigo_ine": "1104"
+    },
+    "190": {
+      "id": 190,
+      "nombre": "Ita",
+      "departamento_id": 12,
+      "codigo_ine": "1105"
+    },
+    "191": {
+      "id": 191,
+      "nombre": "Itaugua",
+      "departamento_id": 12,
+      "codigo_ine": "1106"
+    },
+    "192": {
+      "id": 192,
+      "nombre": "Lambare",
+      "departamento_id": 12,
+      "codigo_ine": "1107"
+    },
+    "193": {
+      "id": 193,
+      "nombre": "Limpio",
+      "departamento_id": 12,
+      "codigo_ine": "1108"
+    },
+    "194": {
+      "id": 194,
+      "nombre": "Luque",
+      "departamento_id": 12,
+      "codigo_ine": "1109"
+    },
+    "195": {
+      "id": 195,
+      "nombre": "Mariano Roque Alonso",
+      "departamento_id": 12,
+      "codigo_ine": "1110"
+    },
+    "196": {
+      "id": 196,
+      "nombre": "Nueva Italia",
+      "departamento_id": 12,
+      "codigo_ine": "1111"
+    },
+    "197": {
+      "id": 197,
+      "nombre": "Ñemby",
+      "departamento_id": 12,
+      "codigo_ine": "1112"
+    },
+    "198": {
+      "id": 198,
+      "nombre": "San Antonio",
+      "departamento_id": 12,
+      "codigo_ine": "1113"
+    },
+    "199": {
+      "id": 199,
+      "nombre": "San Lorenzo",
+      "departamento_id": 12,
+      "codigo_ine": "1114"
+    },
+    "200": {
+      "id": 200,
+      "nombre": "Villa Elisa",
+      "departamento_id": 12,
+      "codigo_ine": "1115"
+    },
+    "201": {
+      "id": 201,
+      "nombre": "Villeta",
+      "departamento_id": 12,
+      "codigo_ine": "1116"
+    },
+    "202": {
+      "id": 202,
+      "nombre": "Ypacarai",
+      "departamento_id": 12,
+      "codigo_ine": "1117"
+    },
+    "203": {
+      "id": 203,
+      "nombre": "Ypane",
+      "departamento_id": 12,
+      "codigo_ine": "1118"
+    },
+    "204": {
+      "id": 204,
+      "nombre": "J. Augusto Saldivar",
+      "departamento_id": 12,
+      "codigo_ine": "1119"
+    },
+    "205": {
+      "id": 205,
+      "nombre": "Pilar",
+      "departamento_id": 13,
+      "codigo_ine": "1201"
+    },
+    "206": {
+      "id": 206,
+      "nombre": "Alberdi",
+      "departamento_id": 13,
+      "codigo_ine": "1202"
+    },
+    "207": {
+      "id": 207,
+      "nombre": "Cerrito",
+      "departamento_id": 13,
+      "codigo_ine": "1203"
+    },
+    "208": {
+      "id": 208,
+      "nombre": "Desmochados",
+      "departamento_id": 13,
+      "codigo_ine": "1204"
+    },
+    "209": {
+      "id": 209,
+      "nombre": "Gral. Diaz",
+      "departamento_id": 13,
+      "codigo_ine": "1205"
+    },
+    "210": {
+      "id": 210,
+      "nombre": "Guazu Cua",
+      "departamento_id": 13,
+      "codigo_ine": "1206"
+    },
+    "211": {
+      "id": 211,
+      "nombre": "Humaita",
+      "departamento_id": 13,
+      "codigo_ine": "1207"
+    },
+    "212": {
+      "id": 212,
+      "nombre": "Isla Umbu",
+      "departamento_id": 13,
+      "codigo_ine": "1208"
+    },
+    "213": {
+      "id": 213,
+      "nombre": "Los Laureles",
+      "departamento_id": 13,
+      "codigo_ine": "1209"
+    },
+    "214": {
+      "id": 214,
+      "nombre": "Mayor Martinez",
+      "departamento_id": 13,
+      "codigo_ine": "1210"
+    },
+    "215": {
+      "id": 215,
+      "nombre": "Paso de Patria",
+      "departamento_id": 13,
+      "codigo_ine": "1211"
+    },
+    "216": {
+      "id": 216,
+      "nombre": "San Juan Bautista del Ñeembucu",
+      "departamento_id": 13,
+      "codigo_ine": "1212"
+    },
+    "217": {
+      "id": 217,
+      "nombre": "Tacuaras",
+      "departamento_id": 13,
+      "codigo_ine": "1213"
+    },
+    "218": {
+      "id": 218,
+      "nombre": "Villa Franca",
+      "departamento_id": 13,
+      "codigo_ine": "1214"
+    },
+    "219": {
+      "id": 219,
+      "nombre": "Villa Oliva",
+      "departamento_id": 13,
+      "codigo_ine": "1215"
+    },
+    "220": {
+      "id": 220,
+      "nombre": "Villalbin",
+      "departamento_id": 13,
+      "codigo_ine": "1216"
+    },
+    "221": {
+      "id": 221,
+      "nombre": "Pedro Juan Caballero",
+      "departamento_id": 14,
+      "codigo_ine": "1301"
+    },
+    "222": {
+      "id": 222,
+      "nombre": "Bella Vista Norte",
+      "departamento_id": 14,
+      "codigo_ine": "1302"
+    },
+    "223": {
+      "id": 223,
+      "nombre": "Capitan Bado",
+      "departamento_id": 14,
+      "codigo_ine": "1303"
+    },
+    "224": {
+      "id": 224,
+      "nombre": "Zanja Pyta",
+      "departamento_id": 14,
+      "codigo_ine": "1304"
+    },
+    "225": {
+      "id": 225,
+      "nombre": "Saltos del Guaira",
+      "departamento_id": 15,
+      "codigo_ine": "1401"
+    },
+    "226": {
+      "id": 226,
+      "nombre": "Corpus Christi",
+      "departamento_id": 15,
+      "codigo_ine": "1402"
+    },
+    "227": {
+      "id": 227,
+      "nombre": "Curuguaty",
+      "departamento_id": 15,
+      "codigo_ine": "1403"
+    },
+    "228": {
+      "id": 228,
+      "nombre": "Villa Ygatimi",
+      "departamento_id": 15,
+      "codigo_ine": "1404"
+    },
+    "229": {
+      "id": 229,
+      "nombre": "Itanara",
+      "departamento_id": 15,
+      "codigo_ine": "1405"
+    },
+    "230": {
+      "id": 230,
+      "nombre": "Ypejhu",
+      "departamento_id": 15,
+      "codigo_ine": "1406"
+    },
+    "231": {
+      "id": 231,
+      "nombre": "Francisco Caballero Álvarez",
+      "departamento_id": 15,
+      "codigo_ine": "1407"
+    },
+    "232": {
+      "id": 232,
+      "nombre": "Katuete",
+      "departamento_id": 15,
+      "codigo_ine": "1408"
+    },
+    "233": {
+      "id": 233,
+      "nombre": "La Paloma",
+      "departamento_id": 15,
+      "codigo_ine": "1409"
+    },
+    "234": {
+      "id": 234,
+      "nombre": "Nueva Esperanza",
+      "departamento_id": 15,
+      "codigo_ine": "1410"
+    },
+    "235": {
+      "id": 235,
+      "nombre": "Yasy Kañy",
+      "departamento_id": 15,
+      "codigo_ine": "1411"
+    },
+    "236": {
+      "id": 236,
+      "nombre": "Ybyrarobana",
+      "departamento_id": 15,
+      "codigo_ine": "1412"
+    },
+    "237": {
+      "id": 237,
+      "nombre": "Yby Pyta",
+      "departamento_id": 15,
+      "codigo_ine": "1413"
+    },
+    "239": {
+      "id": 239,
+      "nombre": "Benjamin Aceval",
+      "departamento_id": 16,
+      "codigo_ine": "1502"
+    },
+    "240": {
+      "id": 240,
+      "nombre": "Puerto Pinasco",
+      "departamento_id": 16,
+      "codigo_ine": "1503"
+    },
+    "241": {
+      "id": 241,
+      "nombre": "Villa Hayes",
+      "departamento_id": 16,
+      "codigo_ine": "1504"
+    },
+    "242": {
+      "id": 242,
+      "nombre": "Nanawa",
+      "departamento_id": 16,
+      "codigo_ine": "1505"
+    },
+    "243": {
+      "id": 243,
+      "nombre": "Jose Falcon",
+      "departamento_id": 16,
+      "codigo_ine": "1506"
+    },
+    "244": {
+      "id": 244,
+      "nombre": "Tte. 1ro. Manuel Irala Fernand",
+      "departamento_id": 16,
+      "codigo_ine": "1507"
+    },
+    "245": {
+      "id": 245,
+      "nombre": "Tte. Esteban Martinez",
+      "departamento_id": 16,
+      "codigo_ine": "1508"
+    },
+    "246": {
+      "id": 246,
+      "nombre": "Gral. Jose Maria Bruguez",
+      "departamento_id": 16,
+      "codigo_ine": "1509"
+    },
+    "247": {
+      "id": 247,
+      "nombre": "Mariscal Estigarribia",
+      "departamento_id": 17,
+      "codigo_ine": "1602"
+    },
+    "249": {
+      "id": 249,
+      "nombre": "Filadelfia",
+      "departamento_id": 17,
+      "codigo_ine": "1604"
+    },
+    "250": {
+      "id": 250,
+      "nombre": "Loma Plata",
+      "departamento_id": 17,
+      "codigo_ine": "1605"
+    },
+    "254": {
+      "id": 254,
+      "nombre": "Fuerte Olimpo",
+      "departamento_id": 18,
+      "codigo_ine": "1701"
+    },
+    "255": {
+      "id": 255,
+      "nombre": "Puerto Casado",
+      "departamento_id": 18,
+      "codigo_ine": "1702"
+    },
+    "256": {
+      "id": 256,
+      "nombre": "Bahia Negra",
+      "departamento_id": 18,
+      "codigo_ine": "1704"
+    },
+    "257": {
+      "id": 257,
+      "nombre": "Carmelo Peralta",
+      "departamento_id": 18,
+      "codigo_ine": "1705"
+    },
+    "258": {
+      "id": 258,
+      "nombre": "Campo Aceval",
+      "departamento_id": 16,
+      "codigo_ine": "1510"
+    }
+  },
+  "pendientes": [
+    {
+      "id": 15,
+      "nombre": "Vallemi",
+      "departamento_id": 2
+    },
+    {
+      "id": 238,
+      "nombre": "Pozo Colorado",
+      "departamento_id": 16
+    },
+    {
+      "id": 248,
+      "nombre": "Gral. Eugenio A. Garay",
+      "departamento_id": 17
+    },
+    {
+      "id": 251,
+      "nombre": "Menno",
+      "departamento_id": 17
+    },
+    {
+      "id": 252,
+      "nombre": "Fernheim",
+      "departamento_id": 17
+    },
+    {
+      "id": 253,
+      "nombre": "Neuland",
+      "departamento_id": 17
+    }
+  ]
+}

@@ -4,6 +4,7 @@
     <script>
         var siat = {
             secciones: {!! $secciones !!},
+            reglas: @json(config("formulario_accidente")),
             departamentos: {!! $departamentos !!}
         };
         var departamentos = {!! $departamentos !!};
@@ -94,21 +95,8 @@
                 v-for="seccion in secciones"
                 v-show="currentIndex == seccion.index && showForm"
                 :is="seccion.tipo"
-                :agrupado="seccion">>
-                </component>
+                :agrupado="seccion">
             </component>
-            <!-- component
-                v-for="grupo in grupos"
-                v-show="currentIndex == grupo.index && showForm"
-                :is="grupo.tipo"
-                :grupo="grupo">
-                <component
-                    v-for="pregunta in grupo.preguntas"
-                    :is="pregunta.tipo"
-                    :question="pregunta">
-                </component>
-            </component -->
-
             <div class="row" v-show="showForm">
                 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-center">
                     @{{ currentIndex + 1 }} de @{{ secciones.length }}
@@ -176,8 +164,8 @@
                 </div>
             </div>
             <div class="panel-body">
+                <div v-for="pregunta in grupo.preguntas" class="form70-question" :data-question="pregunta.pregunta_id" :data-group="grupo.duplicable ? grupo.id * 1000000 + grupo.agrupador + 1 : grupo.id">
                 <component
-                    v-for="pregunta in grupo.preguntas"
                     :is="pregunta.tipo"
                     :grupo="grupo.id"
                     :question="pregunta"
@@ -185,6 +173,8 @@
                     :agrupador="grupo.agrupador"
                     :index="$index">
                 </component>
+                <span class="help-block form70-required" style="display:none">Este campo es obligatorio.</span>
+                </div>
             </div>
         </div>
     </script>
@@ -241,7 +231,7 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('lugar', 'Lugar:', ['class' => 'col-sm-2 control-label']) !!}
+                        {!! Form::label('lugar', 'Ubicación del siniestro:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             {!! Form::text('lugar', null, ['class' => 'form-control', 'placeholder' => 'Lugar o Dirección']) !!}
                         </div>
@@ -255,35 +245,13 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        {!! Form::label('tipo_camino', 'Tipo Camino:', ['class' => 'col-sm-2 control-label']) !!}
-                        <div class="col-sm-8">
-                            <label id="tipo_camino_calle" class="radio-inline icheck">
-                                {!! Form::radio('tipo_camino', 'calle', null, array('id' => 'tipo_camino_calle')) !!} Calle
-                            </label>
-                            <label id="tipo_camino_ruta" class="radio-inline icheck">
-                                {!! Form::radio('tipo_camino', 'ruta', null, array('id' => 'tipo_camino_ruta')) !!} Ruta
-                            </label>
-                            <label id="tipo_camino_avenida" class="radio-inline icheck">
-                                {!! Form::radio('tipo_camino', 'avenida', null, array('id' => 'tipo_camino_avenida')) !!} Avenida
-                            </label>
-                            <label id="tipo_camino_ramal" class="radio-inline icheck">
-                                {!! Form::radio('tipo_camino', 'ramal', null, array('id' => 'tipo_camino_ramal')) !!} Ramal
-                            </label>
-                            <label id="tipo_camino_camino_vecinal" class="radio-inline icheck">
-                                {!! Form::radio('tipo_camino', 'camino_vecinal', null, array('id' => 'tipo_camino_camino_vecinal')) !!} Camino Vecinal
-                            </label>
-                            <label id="tipo_camino_interseccion" class="radio-inline icheck">
-                                {!! Form::radio('tipo_camino', 'interseccion', null, array('id' => 'tipo_camino_interseccion')) !!} Intersección
-                            </label>
-                        </div>
-                    </div>
+                    @include('accidentes.partials.via-area', ['accidenteActual' => null])
 
                     <div class="form-group has-error">
                         {!! Form::label('departamento', 'Departamento:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             <select name="departamento_id" class="form-control" v-model="departamento_id">
-                                <option>Seleccione Departamento...</option>
+                                <option value="">Seleccione Departamento...</option>
                                 <option v-for="departamento in departamentos" v-bind:value="departamento.id">@{{ departamento.nombre }}</option>
                             </select>
                             <span class="help-block">Este campo es requerido.</span>
@@ -294,7 +262,7 @@
                         {!! Form::label('distrito', 'Distrito:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             <select name="distrito_id" class="form-control" v-model="distrito_id">
-                                <option>Seleccione Distrito...</option>
+                                <option value="">Seleccione Distrito...</option>
                                 <option v-for="distrito in distritos" v-bind:value="distrito.id">@{{ distrito.nombre }}</option>
                             </select>
                             <span class="help-block" v-html="distrito_text">Este campo es requerido.</span>
@@ -305,7 +273,7 @@
                         {!! Form::label('localidad', 'Localidad:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             <select name="localidad_id" class="form-control" v-model="localidad_id">
-                                <option>Seleccione Localidad...</option>
+                                <option value="">Seleccione Localidad...</option>
                                 <option v-for="localidad in localidades" v-bind:value="localidad.id">@{{ localidad.nombre }}</option>
                             </select>
                             <span class="help-block" v-html="localidad_text">Este campo es requerido.</span>
@@ -329,8 +297,13 @@
                         </div>
                         <div class="col-sm-10 col-sm-offset-2">
                             <span class="help-block">Estos campos son requeridos.</span>
-                            <div id="coordenadas-accidente" style="width: 100%; height: 400px;"></div>
-                            <span class="help-block">La aplicación va a solicitar acceso a la ubicación de su dispositivo.</span>
+                            <input type="hidden" name="ubicacion_confirmada" value="0">
+                            <div id="coordenadas-accidente" data-geografia-url="{{ url('accidentes/geografia') }}" style="width: 100%; height: 400px;"></div>
+                            <p id="mapa-estado" class="help-block" role="status" aria-live="polite">Seleccione un departamento para ubicar el siniestro.</p>
+                            <button type="button" id="mapa-modificar" class="btn btn-default" disabled>Modificar ubicación</button>
+                            <button type="button" id="mapa-confirmar" class="btn btn-primary" disabled>Confirmar ubicación</button>
+                            <button type="button" id="mapa-reintentar" class="btn btn-default" style="display:none">Reintentar carga del límite</button>
+                            <span class="help-block">Seleccione el distrito, ajuste el punto y confirme la ubicación exacta del siniestro. Límites referenciales: INE, Censo 2022.</span>
                         </div>
                     </div>
                 </div>
@@ -345,8 +318,8 @@
             >
                 <label class="col-sm-4 control-label">@{{ question.pregunta }}</label>
                 <div class="col-sm-8">
-                    <input type="text" name="respuestas[@{{ (duplicable == true) ? ((grupo * 10) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}]" class="form-control">
-                    <span class="help-block" v-if="question.instrucciones != ''">@{{ question.instrucciones }}</span>
+                    <input type="text" name="respuestas[@{{ (duplicable == true) ? ((grupo * 1000000) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}]" class="form-control">
+                    <span class="help-block" v-if="question.instrucciones &amp;&amp; question.instrucciones.trim() &amp;&amp; question.instrucciones.replace(/^\s*\d+\s*[.\-):]\s*/, '').trim().replace(/\s+/g, ' ').toLowerCase() != question.pregunta.replace(/^\s*\d+\s*[.\-):]\s*/, '').trim().replace(/\s+/g, ' ').toLowerCase()">@{{ question.instrucciones }}</span>
                 </div>
             </div>
         </div>
@@ -359,8 +332,8 @@
             >
                 <label class="col-sm-4 control-label">@{{ question.pregunta }}</label>
                 <div class="col-sm-8">
-                    <input type="number" inputmode="numeric" min="0" pattern="[0-9]*" name="respuestas[@{{ (duplicable == true) ? ((grupo * 10) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}]" class="form-control">
-                    <span class="help-block" v-if="question.instrucciones != ''">@{{ question.instrucciones }}</span>
+                    <input type="number" inputmode="numeric" min="0" pattern="[0-9]*" name="respuestas[@{{ (duplicable == true) ? ((grupo * 1000000) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}]" class="form-control">
+                    <span class="help-block" v-if="question.instrucciones &amp;&amp; question.instrucciones.trim() &amp;&amp; question.instrucciones.replace(/^\s*\d+\s*[.\-):]\s*/, '').trim().replace(/\s+/g, ' ').toLowerCase() != question.pregunta.replace(/^\s*\d+\s*[.\-):]\s*/, '').trim().replace(/\s+/g, ' ').toLowerCase()">@{{ question.instrucciones }}</span>
                     <img v-if="question.pregunta_id == 33" class="img-responsive img-rounded" style="width: 50%;" src="{{ asset('img/ubicacion-pasajeros.png') }}" />
                 </div>
             </div>
@@ -377,7 +350,7 @@
                     <div v-if="question.mostrar_selector">
                         <select
                             class="select2" style="width: 100% !important"
-                            name="respuestas[@{{ (duplicable == true) ? ((grupo * 10) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}][]">
+                            name="respuestas[@{{ (duplicable == true) ? ((grupo * 1000000) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}][]">
                             <option></option>
                             <option v-for="opcion in question.opciones" value="@{{ opcion }}"> @{{ opcion }}</option>
                         </select>
@@ -385,15 +358,15 @@
                     <div v-if="!question.mostrar_selector">
                         <div class="radio blue icheck" v-for="opcion in question.opciones" >
                             <label>
-                                <input type="radio" name="respuestas[@{{ (duplicable == true) ? ((grupo * 10) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}][]" value="@{{ opcion }}"> @{{ opcion }}
+                                <input type="radio" name="respuestas[@{{ (duplicable == true) ? ((grupo * 1000000) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}][]" value="@{{ opcion }}"> @{{ opcion }}
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-8 col-sm-offset-4" style="margin-top: 0.5em;" v-if="question.mostrar_otro">
-                    <input type="text" :placeholder="question.titulo_otro" name="respuestas[@{{ (duplicable == true) ? ((grupo * 10) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}]" class="form-control">
+                    <input type="text" :placeholder="question.titulo_otro" name="respuestas[@{{ (duplicable == true) ? ((grupo * 1000000) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}]" class="form-control">
                 </div>
-                <div class="col-sm-8 col-sm-offset-4" v-if="question.instrucciones != ''">
+                <div class="col-sm-8 col-sm-offset-4" v-if="question.instrucciones &amp;&amp; question.instrucciones.trim() &amp;&amp; question.instrucciones.replace(/^\s*\d+\s*[.\-):]\s*/, '').trim().replace(/\s+/g, ' ').toLowerCase() != question.pregunta.replace(/^\s*\d+\s*[.\-):]\s*/, '').trim().replace(/\s+/g, ' ').toLowerCase()">
                     <span class="help-block">@{{ question.instrucciones }}</span>
                 </div>
             </div>
@@ -409,14 +382,14 @@
                 <div class="col-sm-8 icheck-square">
                     <div class="checkbox blue icheck" v-for="opcion in question.opciones">
                         <label>
-                            <input type="checkbox" name="respuestas[@{{ (duplicable == true) ? ((grupo * 10) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}][]" value="@{{ opcion }}"> @{{ opcion }}
+                            <input type="checkbox" name="respuestas[@{{ (duplicable == true) ? ((grupo * 1000000) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}][]" value="@{{ opcion }}"> @{{ opcion }}
                         </label>
                     </div>
                 </div>
                 <div class="col-sm-8 col-sm-offset-4" style="margin-top: 0.5em;" v-if="question.mostrar_otro">
-                    <input type="text" :placeholder="question.titulo_otro" name="respuestas[@{{ (duplicable == true) ? ((grupo * 10) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}][]" class="form-control">
+                    <input type="text" :placeholder="question.titulo_otro" name="respuestas[@{{ (duplicable == true) ? ((grupo * 1000000) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}][]" class="form-control">
                 </div>
-                <div class="col-sm-8 col-sm-offset-4" v-if="question.instrucciones != ''">
+                <div class="col-sm-8 col-sm-offset-4" v-if="question.instrucciones &amp;&amp; question.instrucciones.trim() &amp;&amp; question.instrucciones.replace(/^\s*\d+\s*[.\-):]\s*/, '').trim().replace(/\s+/g, ' ').toLowerCase() != question.pregunta.replace(/^\s*\d+\s*[.\-):]\s*/, '').trim().replace(/\s+/g, ' ').toLowerCase()">
                     <span class="help-block">@{{ question.instrucciones }}</span>
                 </div>
             </div>
@@ -430,8 +403,8 @@
             >
                 <label class="col-sm-4 control-label">@{{ question.pregunta }}</label>
                 <div class="col-sm-8">
-                    <input type="text" name="respuestas[@{{ (duplicable == true) ? ((grupo * 10) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}]" class="form-control datepicker">
-                    <span class="help-block" v-if="question.instrucciones != ''">@{{ question.instrucciones }}</span>
+                    <input type="text" name="respuestas[@{{ (duplicable == true) ? ((grupo * 1000000) + agrupador + 1) : grupo }}][@{{ question.pregunta_id }}]" class="form-control datepicker">
+                    <span class="help-block" v-if="question.instrucciones &amp;&amp; question.instrucciones.trim() &amp;&amp; question.instrucciones.replace(/^\s*\d+\s*[.\-):]\s*/, '').trim().replace(/\s+/g, ' ').toLowerCase() != question.pregunta.replace(/^\s*\d+\s*[.\-):]\s*/, '').trim().replace(/\s+/g, ' ').toLowerCase()">@{{ question.instrucciones }}</span>
                 </div>
             </div>
         </div>

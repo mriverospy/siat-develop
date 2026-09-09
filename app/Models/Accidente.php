@@ -35,6 +35,7 @@ class Accidente extends Model
         'lugar',
         'codigo_postal',
         'tipo_camino',
+        'area',
         'altura',
         'codigo_postal',
         'gps_latitud',

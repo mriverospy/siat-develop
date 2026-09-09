@@ -15,6 +15,11 @@ Vue.component('cabecera', {
     },
 
     ready: function() {
+        this.$nextTick(function() {
+            this.mapaAccidente = window.SiatMapa.crear(this.$el);
+            this.mapaAccidente.seleccionar(this.departamento_id, this.distrito_id);
+        });
+
         var that = this;
 
         // Setup select 2
@@ -46,6 +51,7 @@ Vue.component('cabecera', {
 
     watch: {
         departamento_id: function(currentValue) {
+            if (this.mapaAccidente) this.mapaAccidente.seleccionar(currentValue, null);
             this.distrito_id = null;
             this.distritos = [];
 
@@ -64,6 +70,7 @@ Vue.component('cabecera', {
                     }.bind(this),
                     success: function(response) {
                         this.distrito_text = 'Este campo es requerido.';
+                        if (String(currentValue) !== String(this.departamento_id)) return;
                         if (response.status == 'success') {
                             this.distritos = response.data.distritos;
                         }
@@ -72,6 +79,7 @@ Vue.component('cabecera', {
             }
         },
         distrito_id: function(currentValue) {
+            if (this.mapaAccidente) this.mapaAccidente.seleccionar(this.departamento_id, currentValue);
             this.localidad_id = null;
             this.localidades = [];
 
@@ -87,6 +95,7 @@ Vue.component('cabecera', {
                     }.bind(this),
                     success: function(response) {
                         this.localidad_text = 'Este campo es requerido.';
+                        if (String(currentValue) !== String(this.distrito_id)) return;
                         if (response.status == 'success') {
                             this.localidades = response.data.localidades;
                         }
@@ -122,7 +131,7 @@ Vue.component('grupo', {
             })
         },
         eliminarGrupo : function(grupoId, grupo){
-            this.$remove(this.seccion);
+            this.$dispatch('eliminar-grupo', {seccion: this.seccion, grupo: grupo});
         }
     }
 });
@@ -226,6 +235,61 @@ Vue.component('date', {
     }
 });
 
+function form70Values() {
+    var groups = {};
+    $('#cargar-accidente').serializeArray().forEach(function(field) {
+        var match = field.name.match(/^respuestas\[(\d+)\]\[(\d+)\]/);
+        if (match) { groups[match[1]] = groups[match[1]] || {}; groups[match[1]][match[2]] = field.value.trim(); }
+    });
+    return groups;
+}
+function form70Applies(id, values, vehicles) {
+    var rule = siat.reglas.condiciones[id] || {};
+    if (rule.sin && values[rule.sin]) return false;
+    if (rule.roles && rule.roles.indexOf(values[135]) < 0) return false;
+    if (rule.pregunta && rule.valores.indexOf(values[rule.pregunta]) < 0) return false;
+    var vehicle = vehicles[values[125]];
+    if (values[135] === 'Ciclista' && values[125] === '0') vehicle = 'Bicicleta';
+    return !rule.vehiculos || rule.vehiculos.indexOf(vehicle) >= 0;
+}
+window.form70Refresh = function() {
+    var groups = form70Values(), vehicles = {};
+    Object.keys(groups).forEach(function(key) { if (groups[key][115]) vehicles[groups[key][115]] = groups[key][118]; });
+    $('.form70-question').each(function() {
+        var el = $(this), id = Number(el.attr('data-question')), values = groups[el.attr('data-group')] || {};
+        var applies = form70Applies(id, values, vehicles);
+        if (!applies) {
+            el.find('input:not(:radio):not(:checkbox), select').val('');
+            el.find('input:radio, input:checkbox').prop('checked', false).iCheck('update');
+        }
+        el.toggle(applies).find('input, select').prop('disabled', !applies);
+        el.find('.form70-required').toggle(applies && (siat.reglas.obligatorias.indexOf(id) >= 0 || (id === 131 && !values[130])));
+    });
+};
+window.form70Validate = function(section) {
+    window.form70Refresh();
+    if (section === undefined || section === 0) {
+        if ($('[name=ubicacion_confirmada]').val() !== '1') return 'Confirme la ubicación del siniestro en el mapa.';
+        var fields = {caratula:'Carátula',fecha_accidente:'Fecha y hora',lugar:'Ubicación del siniestro',tipo_camino:'Tipo de vía',area:'Área',departamento_id:'Departamento',distrito_id:'Distrito',localidad_id:'Localidad',gps_latitud:'Latitud',gps_longitud:'Longitud'};
+        for (var name in fields) if (!String($('[name="'+name+'"]').val() || '').trim()) return 'Complete '+fields[name]+'.';
+    }
+    var groups = form70Values(), error = null;
+    siat.secciones.forEach(function(seccion) {
+        if (section !== undefined && section !== seccion.index) return;
+        seccion.grupos.forEach(function(group) {
+            var key = group.duplicable ? group.id * 1000000 + group.agrupador + 1 : group.id;
+            var values = groups[key] || {};
+            group.preguntas.forEach(function(q) {
+                var element = $('.form70-question[data-group="'+key+'"][data-question="'+q.pregunta_id+'"]');
+                if (element.find('input, select').first().prop('disabled')) return;
+                var required = q.obligatorio || siat.reglas.obligatorias.indexOf(q.pregunta_id) >= 0 || (q.pregunta_id === 131 && !values[130]);
+                if (required && !values[q.pregunta_id] && !error) error = group.grupo_nombre+': complete '+q.pregunta+'.';
+            });
+        });
+    });
+    return error;
+};
+
 var app = new Vue({
     el: 'body',
 
@@ -247,16 +311,23 @@ var app = new Vue({
     },
 
     events: {
+        'eliminar-grupo': function(msg) {
+            var grupos = this.secciones[msg.seccion].grupos;
+            if (grupos.filter(function(g) { return g.id === msg.grupo.id; }).length <= 1) return;
+            grupos.splice(grupos.indexOf(msg.grupo), 1);
+            this.$nextTick(window.form70Refresh);
+        },
         'duplicar-grupo': function(msg) {
             if (typeof siat.secciones[msg.seccion] != 'undefined') {
                 siat.secciones[msg.seccion].grupos.push({
-                    agrupador: siat.secciones[msg.seccion].grupos.length + 1,
+                    agrupador: Math.max.apply(null, siat.secciones[msg.seccion].grupos.map(function(g) { return g.agrupador; })) + 1,
                     duplicable: msg.grupo.duplicable,
                     grupo_nombre: msg.grupo.grupo_nombre,
                     id: msg.grupo.id,
                     preguntas: msg.grupo.preguntas,
                     tipo: msg.grupo.tipo
                 });
+                this.$nextTick(window.form70Refresh);
             }
         }
     },
@@ -265,6 +336,8 @@ var app = new Vue({
         $('div.loading').detach();
 
         $('#cargar-accidente').removeClass('hide');
+        $('#cargar-accidente').on('change ifChanged', 'input, select', window.form70Refresh);
+        this.$nextTick(window.form70Refresh);
 
         Mousetrap.bind('left', function(e) {
             app.previousQuestion();
@@ -299,6 +372,7 @@ var app = new Vue({
 
     watch: {
         currentIndex: function() {
+            this.$nextTick(function() { $(document).trigger('siat:mapa-visible'); });
             var progressWidth = parseInt((this.currentIndex * 100) / this.secciones.length);
             this.progressBar.width = progressWidth + '%';
 
@@ -341,124 +415,14 @@ var app = new Vue({
         },
 
         nextQuestion: function() {
-            if (this.currentIndex >= 0 && this.currentIndex <= this.secciones.length) {
-                let avanzar = true;
-                if(this.currentIndex > 0){
-                    this.secciones[this.currentIndex].grupos[0].preguntas.forEach(pregunta => {
-                        if(pregunta.obligatorio){
-                            let grupo = pregunta.grupo_id;
-                            if(pregunta.grupo_duplicable){
-                               grupo = (grupo * 10) + this.secciones[this.currentIndex].grupos[0].agrupador + 1;
-                            }
-                            let preguntaID = pregunta.pregunta_id;
-                            let name = `respuestas[${grupo}][${preguntaID}]`;
-                            if(["radio","check"].includes(pregunta.tipo)){
-                                name = `respuestas[${grupo}][${preguntaID}][]`;
-                                if(pregunta.mostrar_selector){
-                                    let select = document.getElementsByName(name)[0].value;
-                                    if(select == null || select === ''){
-                                        alert('Por favor, ' + pregunta.instrucciones);
-                                        avanzar = false;
-                                    }
-                                }else{
-                                    let opciones = document.getElementsByName(name);
-                                    let seleccionada = false;
-                                    for(let opcion of opciones){
-                                        if(opcion.checked){
-                                            seleccionada = true;
-                                            break;
-                                        }
-                                    }
-                                    if(!seleccionada){
-                                        alert('Por favor, ' + pregunta.instrucciones);
-                                        avanzar = false;
-                                    }
-                                }
-                            }else{
-                                let input = document.getElementsByName(name)[0].value;
-                                if(input == null || input === ''){
-                                    alert('Por favor, ' + pregunta.instrucciones);
-                                    avanzar = false;
-                                }
-                            }
-                        }
-                    });
-                }
-
-                if(avanzar){
-                    this.currentIndex = this.currentIndex + 1;
-                    $('html, body').animate({ scrollTop: 0 }, 'fast');
-                }
-            }
+            var error = window.form70Validate(this.currentIndex);
+            if (error) { alert(error); return; }
+            if (this.currentIndex < this.secciones.length - 1) this.currentIndex++;
         },
 
         saveForm: function() {
-            if ($('input[name=caratula]').val() == '') {
-                alert('Por favor, ingrese una Carátula para este accidente');
-                this.currentIndex = 0;
-                return false;
-            }
-
-            if ($('input[name=fecha_accidente]').val() == '') {
-                alert('Por favor, defina la fecha de este accidente');
-                this.currentIndex = 0;
-                return false;
-            }
-
-            if ($('select[name=localidad_id]').val() == null || $('select[name=localidad_id]').val() == '') {
-                alert('Por favor, selecciona la localidad donde se produjo el accidente');
-                this.currentIndex = 0;
-                return false;
-            }
-
-            if ($('input[name=gps_latitud]').val() == '' || $('input[name=gps_longitud]').val() == '') {
-                alert('Por favor, especifique el lugar donde ocurrió el accidente en el mapa');
-                this.currentIndex = 0;
-                return false;
-            }
-
-            for (let i = 1; i < this.secciones.length; i++){
-                for(let pregunta of this.secciones[i].grupos[0].preguntas){
-                    if(pregunta.obligatorio){
-                        let grupo = pregunta.grupo_id;
-                        if(pregunta.grupo_duplicable){
-                            grupo = (grupo * 10) + this.secciones[i].grupos[0].agrupador + 1;
-                        }
-                        let preguntaID = pregunta.pregunta_id;
-                        let name = `respuestas[${grupo}][${preguntaID}]`;
-                        if(["radio","check"].includes(pregunta.tipo)){
-                            name = `respuestas[${grupo}][${preguntaID}][]`;
-                            if(pregunta.mostrar_selector){
-                                let select = document.getElementsByName(name)[0].value;
-                                if(select == null || select === ''){
-                                    alert('Tiene preguntas sin responder');
-                                    return  false;
-                                }
-                            }else{
-                                let opciones = document.getElementsByName(name);
-                                let seleccionada = false;
-                                for(let opcion of opciones){
-                                    if(opcion.checked){
-                                        seleccionada = true;
-                                        break;
-                                    }
-                                }
-                                if(!seleccionada){
-                                    alert('Tiene preguntas sin responder');
-                                    return false;
-                                }
-                            }
-                        }else{
-                            let input = document.getElementsByName(name)[0].value;
-                            if(input == null || input === ''){
-                                alert('Tiene preguntas sin responder');
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-
+            var error = window.form70Validate();
+            if (error) { alert(error); return false; }
 
             // Reset error messages
             this.errors = [];

@@ -43,8 +43,10 @@
                         <dd>{{ $accidente->lugar }}</dd>
                         <dt>Altura:</dt>
                         <dd>{{ $accidente->altura }}</dd>
-                        <dt>Tipo Camino:</dt>
-                        <dd>{{ ucwords($accidente->tipo_camino) }}</dd>
+                        <dt>Tipo de vía:</dt>
+                        <dd>{{ config('formulario_accidente.vias')[$accidente->tipo_camino] ?? ucwords($accidente->tipo_camino) }}</dd>
+                        <dt>Área:</dt>
+                        <dd>{{ config('formulario_accidente.areas')[$accidente->area] ?? 'Sin registrar' }}</dd>
                         <dt>Localidad:</dt>
                         <dd>{{ $accidente->localidad->nombre }}</dd>
                         <dt>Distrito:</dt>
