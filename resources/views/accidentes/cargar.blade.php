@@ -27,6 +27,7 @@
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
                     <h1>Cargar Accidente</h1>
+                    <p class="help-block">Los campos con asterisco (*) son obligatorios.</p>
                 </div>
                 <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 text-center">
                     <small>
@@ -164,7 +165,7 @@
                 </div>
             </div>
             <div class="panel-body">
-                <div v-for="pregunta in grupo.preguntas" class="form70-question" :data-question="pregunta.pregunta_id" :data-group="grupo.duplicable ? grupo.id * 1000000 + grupo.agrupador + 1 : grupo.id">
+                <div v-for="pregunta in grupo.preguntas" class="form70-question" :data-required="pregunta.obligatorio ? 1 : 0" :data-question="pregunta.pregunta_id" :data-group="grupo.duplicable ? grupo.id * 1000000 + grupo.agrupador + 1 : grupo.id">
                 <component
                     :is="pregunta.tipo"
                     :grupo="grupo.id"
@@ -173,7 +174,6 @@
                     :agrupador="grupo.agrupador"
                     :index="$index">
                 </component>
-                <span class="help-block form70-required" style="display:none">Este campo es obligatorio.</span>
                 </div>
             </div>
         </div>
@@ -190,7 +190,6 @@
                         {!! Form::label('caratula', 'Carátula:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             {!! Form::text('caratula', null, ['class' => 'form-control', 'placeholder' => 'Carátula']) !!}
-                            <span class="help-block">Este campo es requerido.</span>
                         </div>
                     </div>
 
@@ -226,7 +225,7 @@
                         {!! Form::label('fecha_accidente', 'Fecha y Hora:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             {!! Form::text('fecha_accidente', null, ['class' => 'form-control datetime-picker', 'placeholder' => 'Fecha y Hora del Accidente', 'data-date-language' => 'es']) !!}
-                            <span class="help-block">Fecha y Hora del Accidente. Este campo es requerido.</span>
+                            <span class="help-block">Fecha y Hora del Accidente.</span>
                         </div>
                     </div>
 
@@ -245,7 +244,7 @@
                         </div>
                     </div>
 
-                    @include('accidentes.partials.via-area', ['accidenteActual' => null])
+                    @include('accidentes.partials.via-area', ['accidenteActual' => null, 'mostrarAvisoRequerido' => false])
 
                     <div class="form-group">
                         {!! Form::label('departamento', 'Departamento:', ['class' => 'col-sm-2 control-label']) !!}
@@ -254,7 +253,6 @@
                                 <option value="">Seleccione Departamento...</option>
                                 <option v-for="departamento in departamentos" v-bind:value="departamento.id">@{{ departamento.nombre }}</option>
                             </select>
-                            <span class="help-block">Este campo es requerido.</span>
                         </div>
                     </div>
 
@@ -265,7 +263,7 @@
                                 <option value="">Seleccione Distrito...</option>
                                 <option v-for="distrito in distritos" v-bind:value="distrito.id">@{{ distrito.nombre }}</option>
                             </select>
-                            <span class="help-block" v-html="distrito_text">Este campo es requerido.</span>
+                            <span class="help-block" v-html="distrito_text"></span>
                         </div>
                     </div>
 
@@ -276,7 +274,7 @@
                                 <option value="">Seleccione Localidad...</option>
                                 <option v-for="localidad in localidades" v-bind:value="localidad.id">@{{ localidad.nombre }}</option>
                             </select>
-                            <span class="help-block" v-html="localidad_text">Este campo es requerido.</span>
+                            <span class="help-block" v-html="localidad_text"></span>
                         </div>
                     </div>
 
@@ -296,7 +294,6 @@
                             {!! Form::text('gps_longitud', null, ['class' => 'form-control', 'readonly' => true, 'required' => true]) !!}
                         </div>
                         <div class="col-sm-10 col-sm-offset-2">
-                            <span class="help-block">Estos campos son requeridos.</span>
                             <input type="hidden" name="ubicacion_confirmada" value="0">
                             <div id="coordenadas-accidente" data-geografia-url="{{ url('accidentes/geografia') }}" style="width: 100%; height: 400px;"></div>
                             <p id="mapa-estado" class="help-block" role="status" aria-live="polite">Seleccione un departamento para ubicar el siniestro.</p>

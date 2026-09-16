@@ -7,10 +7,10 @@ Vue.component('cabecera', {
             departamento_id: null,
             distritos: [],
             distrito_id: null,
-            distrito_text: 'Este campo es requerido.',
+            distrito_text: '',
             localidades: [],
             localidad_id: null,
-            localidad_text: 'Este campo es requerido.'
+            localidad_text: ''
         }
     },
 
@@ -66,10 +66,10 @@ Vue.component('cabecera', {
                         this.distrito_text = 'Cargando...';
                     }.bind(this),
                     error: function() {
-                        this.distrito_text = 'Este campo es requerido.';
+                        this.distrito_text = '';
                     }.bind(this),
                     success: function(response) {
-                        this.distrito_text = 'Este campo es requerido.';
+                        this.distrito_text = '';
                         if (String(currentValue) !== String(this.departamento_id)) return;
                         if (response.status == 'success') {
                             this.distritos = response.data.distritos;
@@ -91,10 +91,10 @@ Vue.component('cabecera', {
                         this.localidad_text = 'Cargando...';
                     }.bind(this),
                     error: function() {
-                        this.localidad_text = 'Este campo es requerido.';
+                        this.localidad_text = '';
                     }.bind(this),
                     success: function(response) {
-                        this.localidad_text = 'Este campo es requerido.';
+                        this.localidad_text = '';
                         if (String(currentValue) !== String(this.distrito_id)) return;
                         if (response.status == 'success') {
                             this.localidades = response.data.localidades;
@@ -257,6 +257,12 @@ function form70MarkInvalid(element, invalid) {
     element.find('input, select').attr('aria-invalid', invalid ? 'true' : 'false');
 }
 window.form70Refresh = function() {
+    var headerFields = ['caratula', 'fecha_accidente', 'lugar', 'tipo_camino', 'area', 'departamento_id', 'distrito_id', 'localidad_id', 'gps_latitud', 'gps_longitud'];
+    headerFields.forEach(function(name) {
+        var field = $('#cargar-accidente [name="' + name + '"]');
+        field.attr('aria-required', 'true');
+        field.closest('.form-group').find('.control-label').addClass('required-label');
+    });
     var groups = form70Values(), vehicles = {};
     Object.keys(groups).forEach(function(key) { if (groups[key][115]) vehicles[groups[key][115]] = groups[key][118]; });
     $('.form70-question').each(function() {
@@ -268,7 +274,9 @@ window.form70Refresh = function() {
         }
         el.toggle(applies).find('input, select').prop('disabled', !applies);
         if (!applies || values[id]) form70MarkInvalid(el, false);
-        el.find('.form70-required').toggle(applies && (siat.reglas.obligatorias.indexOf(id) >= 0 || (id === 131 && !values[130])));
+        var required = applies && (el.attr('data-required') === '1' || siat.reglas.obligatorias.indexOf(id) >= 0 || (id === 131 && !values[130]));
+        el.find('.control-label').toggleClass('required-label', required);
+        el.find('input, select').attr('aria-required', required ? 'true' : 'false');
     });
     $('#cargar-accidente .form-group.has-error').each(function() {
         var element = $(this);

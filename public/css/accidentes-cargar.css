@@ -37,6 +37,8 @@
     margin-bottom: 20px;
 }
 
-#cargar-accidente .form70-required {
-    font-size: 13px;
+#cargar-accidente .required-label::after {
+    content: " (*)";
+    color: #c0392b;
+    font-weight: 700;
 }

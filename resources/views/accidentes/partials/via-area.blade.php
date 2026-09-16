@@ -10,7 +10,9 @@
                 <option value="{{ $valor }}" @if($accidenteActual && $accidenteActual->tipo_camino === $valor) selected @endif>{{ $texto }}</option>
             @endforeach
         </select>
-        <span class="help-block">Este campo es obligatorio.</span>
+        @if ($mostrarAvisoRequerido ?? true)
+            <span class="help-block">Este campo es obligatorio.</span>
+        @endif
     </div>
 </div>
 <div class="form-group">
@@ -22,6 +24,8 @@
                 <option value="{{ $valor }}" @if($accidenteActual && $accidenteActual->area === $valor) selected @endif>{{ $texto }}</option>
             @endforeach
         </select>
-        <span class="help-block">Este campo es obligatorio.</span>
+        @if ($mostrarAvisoRequerido ?? true)
+            <span class="help-block">Este campo es obligatorio.</span>
+        @endif
     </div>
 </div>
