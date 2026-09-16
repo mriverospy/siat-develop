@@ -24,6 +24,7 @@
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="{{ asset('css/carga_evento.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/accidentes-cargar.css') }}?v={{ filemtime(public_path('css/accidentes-cargar.css')) }}" rel="stylesheet">
     <!-- <link href="{{ asset('css/offline-theme-default.css') }}" rel="stylesheet"> -->
     <link href="{{ asset('css/offline-theme-default-indicator.css') }}" rel="stylesheet">
     <!-- <link href="{{ asset('css/offline-language-spanish.css') }}" rel="stylesheet"> -->

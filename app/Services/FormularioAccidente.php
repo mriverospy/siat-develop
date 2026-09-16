@@ -93,7 +93,14 @@ class FormularioAccidente
                     if ($q->tipo === 'date' && Validator::make(['date' => $v], ['date' => 'date_format:Y-m-d'])->fails()) $error($id, "{$q->pregunta}: fecha inválida.");
                 }
                 if (in_array($id, [115,116,123,125,131]) && (!ctype_digit($value) || ($id === 115 && (int)$value < 1))) $error($id, "{$q->pregunta}: ingrese un entero válido.");
-                if ($id === 125 && !($value === '0' && in_array(self::valor($group[135] ?? ''), ['Peatón','Ciclista'])) && !isset($vehicles[$value])) $error($id, 'La persona debe indicar un vehículo registrado; para peatón o ciclista sin vehículo use 0.');
+                if ($id === 125) {
+                    $role = self::valor($group[135] ?? '');
+                    $withoutVehicle = $value === '0' && in_array($role, ['Peatón', 'Ciclista'], true);
+                    if (!$withoutVehicle && !isset($vehicles[$value])) {
+                        $available = implode(', ', array_keys($vehicles)) ?: 'ninguno';
+                        $error($id, "Grupo $key: vehículo '$value' inválido para el rol '$role'. Vehículos registrados: $available. Seleccione un número registrado; 0 solo se permite para Peatón o Ciclista.");
+                    }
+                }
             }
         }
         unset($group);

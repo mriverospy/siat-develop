@@ -1,0 +1,42 @@
+/* Keep validation feedback on the controls, with neutral, readable text. */
+#cargar-accidente .control-label,
+#cargar-accidente .radio label,
+#cargar-accidente .checkbox label,
+#cargar-accidente .has-error .control-label,
+#cargar-accidente .has-error .radio,
+#cargar-accidente .has-error .checkbox {
+    color: #333;
+}
+
+#cargar-accidente .help-block,
+#cargar-accidente .has-error .help-block {
+    color: #666;
+}
+
+#cargar-accidente .has-error .form-control {
+    border-color: #c0392b;
+    background-color: #fff8f7;
+}
+
+#cargar-accidente .has-error .form-control:focus {
+    border-color: #c0392b;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, .15);
+}
+
+#cargar-accidente .has-error .icheckbox_minimal-blue,
+#cargar-accidente .has-error .iradio_minimal-blue {
+    outline: 2px solid #c0392b;
+    outline-offset: 2px;
+}
+
+#cargar-accidente .has-error #coordenadas-accidente {
+    border: 2px solid #c0392b;
+}
+
+#cargar-accidente .form70-question {
+    margin-bottom: 20px;
+}
+
+#cargar-accidente .form70-required {
+    font-size: 13px;
+}

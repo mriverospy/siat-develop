@@ -5280,6 +5280,10 @@ function form70Applies(id, values, vehicles) {
     if (values[135] === 'Ciclista' && values[125] === '0') vehicle = 'Bicicleta';
     return !rule.vehiculos || rule.vehiculos.indexOf(vehicle) >= 0;
 }
+function form70MarkInvalid(element, invalid) {
+    element.toggleClass('has-error', invalid);
+    element.find('input, select').attr('aria-invalid', invalid ? 'true' : 'false');
+}
 window.form70Refresh = function() {
     var groups = form70Values(), vehicles = {};
     Object.keys(groups).forEach(function(key) { if (groups[key][115]) vehicles[groups[key][115]] = groups[key][118]; });
@@ -5291,17 +5295,38 @@ window.form70Refresh = function() {
             el.find('input:radio, input:checkbox').prop('checked', false).iCheck('update');
         }
         el.toggle(applies).find('input, select').prop('disabled', !applies);
+        if (!applies || values[id]) form70MarkInvalid(el, false);
         el.find('.form70-required').toggle(applies && (siat.reglas.obligatorias.indexOf(id) >= 0 || (id === 131 && !values[130])));
+    });
+    $('#cargar-accidente .form-group.has-error').each(function() {
+        var element = $(this);
+        var empty = element.find('input, select').filter(function() {
+            return !String($(this).val() || '').trim();
+        }).length > 0;
+        if (!empty && (!element.find('[name=ubicacion_confirmada]').length || $('[name=ubicacion_confirmada]').val() === '1')) {
+            form70MarkInvalid(element, false);
+        }
     });
 };
 window.form70Validate = function(section) {
     window.form70Refresh();
     if (section === undefined || section === 0) {
-        if ($('[name=ubicacion_confirmada]').val() !== '1') return 'Confirme la ubicación del siniestro en el mapa.';
+        var locationInvalid = $('[name=ubicacion_confirmada]').val() !== '1';
         var fields = {caratula:'Carátula',fecha_accidente:'Fecha y hora',lugar:'Ubicación del siniestro',tipo_camino:'Tipo de vía',area:'Área',departamento_id:'Departamento',distrito_id:'Distrito',localidad_id:'Localidad',gps_latitud:'Latitud',gps_longitud:'Longitud'};
-        for (var name in fields) if (!String($('[name="'+name+'"]').val() || '').trim()) return 'Complete '+fields[name]+'.';
+        var headerError = locationInvalid ? 'Confirme la ubicación del siniestro en el mapa.' : null;
+        for (var name in fields) {
+            var field = $('[name="'+name+'"]');
+            var invalid = !String(field.val() || '').trim();
+            form70MarkInvalid(field.closest('.form-group'), invalid);
+            if (invalid && !headerError) headerError = 'Complete '+fields[name]+'.';
+        }
+        if (locationInvalid) form70MarkInvalid($('[name=ubicacion_confirmada]').closest('.form-group'), true);
+        if (headerError) return headerError;
     }
-    var groups = form70Values(), error = null;
+    var groups = form70Values(), error = null, vehicles = {};
+    Object.keys(groups).forEach(function(key) {
+        if (groups[key][115]) vehicles[groups[key][115]] = groups[key][118];
+    });
     siat.secciones.forEach(function(seccion) {
         if (section !== undefined && section !== seccion.index) return;
         seccion.grupos.forEach(function(group) {
@@ -5311,7 +5336,19 @@ window.form70Validate = function(section) {
                 var element = $('.form70-question[data-group="'+key+'"][data-question="'+q.pregunta_id+'"]');
                 if (element.find('input, select').first().prop('disabled')) return;
                 var required = q.obligatorio || siat.reglas.obligatorias.indexOf(q.pregunta_id) >= 0 || (q.pregunta_id === 131 && !values[130]);
-                if (required && !values[q.pregunta_id] && !error) error = group.grupo_nombre+': complete '+q.pregunta+'.';
+                var invalid = required && !values[q.pregunta_id];
+                form70MarkInvalid(element, !!invalid);
+                if (invalid && !error) error = group.grupo_nombre+': complete '+q.pregunta+'.';
+                if (q.pregunta_id === 125 && values[125]) {
+                    var withoutVehicle = values[125] === '0' && ['Peatón', 'Ciclista'].indexOf(values[135]) >= 0;
+                    var invalidVehicle = !withoutVehicle && !Object.prototype.hasOwnProperty.call(vehicles, values[125]);
+                    form70MarkInvalid(element, invalidVehicle);
+                    if (invalidVehicle && !error) {
+                        error = group.grupo_nombre + ' (persona ' + (group.agrupador + 1) + '): vehículo "' + values[125] +
+                            '" inválido para el rol "' + (values[135] || '') + '". Vehículos registrados: ' +
+                            (Object.keys(vehicles).join(', ') || 'ninguno') + '. Use un número registrado; 0 solo para Peatón o Ciclista.';
+                    }
+                }
             });
         });
     });
@@ -5364,7 +5401,7 @@ var app = new Vue({
         $('div.loading').detach();
 
         $('#cargar-accidente').removeClass('hide');
-        $('#cargar-accidente').on('change ifChanged', 'input, select', window.form70Refresh);
+        $('#cargar-accidente').on('input change ifChanged', 'input, select', window.form70Refresh);
         this.$nextTick(window.form70Refresh);
 
         Mousetrap.bind('left', function(e) {

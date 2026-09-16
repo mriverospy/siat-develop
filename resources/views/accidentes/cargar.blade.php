@@ -186,7 +186,7 @@
             </div>
             <div class="panel-body">
                 <div class="form-horizontal row-border">
-                    <div class="form-group has-error">
+                    <div class="form-group">
                         {!! Form::label('caratula', 'Carátula:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             {!! Form::text('caratula', null, ['class' => 'form-control', 'placeholder' => 'Carátula']) !!}
@@ -222,7 +222,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group has-error">
+                    <div class="form-group">
                         {!! Form::label('fecha_accidente', 'Fecha y Hora:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             {!! Form::text('fecha_accidente', null, ['class' => 'form-control datetime-picker', 'placeholder' => 'Fecha y Hora del Accidente', 'data-date-language' => 'es']) !!}
@@ -247,7 +247,7 @@
 
                     @include('accidentes.partials.via-area', ['accidenteActual' => null])
 
-                    <div class="form-group has-error">
+                    <div class="form-group">
                         {!! Form::label('departamento', 'Departamento:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             <select name="departamento_id" class="form-control" v-model="departamento_id">
@@ -258,7 +258,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group has-error">
+                    <div class="form-group">
                         {!! Form::label('distrito', 'Distrito:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             <select name="distrito_id" class="form-control" v-model="distrito_id">
@@ -269,7 +269,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group has-error">
+                    <div class="form-group">
                         {!! Form::label('localidad', 'Localidad:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             <select name="localidad_id" class="form-control" v-model="localidad_id">
@@ -287,7 +287,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group has-error">
+                    <div class="form-group">
                         <label class="col-sm-2 control-label">Coordenadas</label>
                         <div class="col-sm-4">
                             {!! Form::text('gps_latitud', null, ['class' => 'form-control', 'readonly' => true, 'required' => true]) !!}
@@ -314,7 +314,6 @@
     <script type="x/template" id="text">
         <div class="form-horizontal row-border">
             <div class="form-group"
-                 :class="question.obligatorio ? 'has-error' : ''"
             >
                 <label class="col-sm-4 control-label">@{{ question.pregunta }}</label>
                 <div class="col-sm-8">
@@ -328,7 +327,6 @@
     <script type="x/template" id="number">
         <div class="form-horizontal row-border">
             <div class="form-group"
-                 :class="question.obligatorio ? 'has-error' : ''"
             >
                 <label class="col-sm-4 control-label">@{{ question.pregunta }}</label>
                 <div class="col-sm-8">
@@ -343,7 +341,6 @@
     <script type="x/template" id="radio">
         <div class="form-horizontal row-border">
             <div class="form-group"
-                 :class="question.obligatorio ? 'has-error' : ''"
             >
                 <label class="col-sm-4 control-label">@{{ question.pregunta }}</label>
                 <div class="col-sm-8 icheck-square">
@@ -376,7 +373,6 @@
     <script type="x/template" id="check">
         <div class="form-horizontal row-border">
             <div class="form-group"
-                 :class="question.obligatorio ? 'has-error' : ''"
             >
                 <label class="col-sm-4 control-label">@{{ question.pregunta }}</label>
                 <div class="col-sm-8 icheck-square">
@@ -399,7 +395,6 @@
     <script type="x/template" id="date">
         <div class="form-horizontal row-border">
             <div class="form-group"
-                 :class="question.obligatorio ? 'has-error' : ''"
             >
                 <label class="col-sm-4 control-label">@{{ question.pregunta }}</label>
                 <div class="col-sm-8">

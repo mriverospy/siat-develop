@@ -26,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Parámetros de configuración general
         View::composer('*', function ($view) {
+            // Error pages must render even when the database is unavailable.
+            if (str_starts_with($view->name(), 'errors.') || str_starts_with($view->name(), 'errors::')) {
+                return;
+            }
+
             $view->with('logo_login', Settings::get('logo_login'));
             $view->with('logo_principal', Settings::get('logo_principal'));
             $view->with('logo_cabecera', Settings::get('logo_cabecera'));
