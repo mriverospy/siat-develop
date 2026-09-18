@@ -37,6 +37,7 @@ class GrupoDePreguntasRequest extends FormRequest
         return [
             'nombre' => 'required|min:3|max:250',
             'descripcion' => 'max:250',
+            'visible' => 'required|boolean',
         ];
     }
 }

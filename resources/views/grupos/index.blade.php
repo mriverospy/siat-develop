@@ -19,6 +19,7 @@
             <th class="text-center">Cantidad Preguntas</th>
             <th class="text-center">Maestro?</th>
             <th class="text-center">Duplicable?</th>
+            <th class="text-center">Visible?</th>
             <th class="text-center">Acciones</th>
         </tr>
     </thead>
@@ -49,6 +50,9 @@
                 @endif
             </td>
             <td class="text-center">
+                <span class="label {{ $item->visible ? 'label-primary' : 'label-default' }}">{{ $item->visible ? 'Sí' : 'No' }}</span>
+            </td>
+            <td class="text-center">
                 <!-- Edit -->
                 @if ($currentUser->ability('sysadmin', $params['route_name'].'-edit'))
                 <a href="{{ url($params['route'], [$item->id, 'edit']) }}" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Editar este Grupo de Preguntas"><i class="fa fa-pencil"></i></a>
@@ -68,7 +72,7 @@
         @endforeach
 
         @if (count($params['data']['items']) == 0)
-            <tr><td colspan="3" class="h4 text-center">No se encontró ningún registro</td></tr>
+            <tr><td colspan="7" class="h4 text-center">No se encontró ningún registro</td></tr>
         @endif
     </tbody>
 @endsection

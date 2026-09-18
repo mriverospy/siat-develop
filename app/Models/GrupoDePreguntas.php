@@ -25,7 +25,7 @@ class GrupoDePreguntas extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre', 'descripcion', 'master', 'orden', 'puede_duplicar'];
+    protected $fillable = ['nombre', 'descripcion', 'master', 'orden', 'puede_duplicar', 'visible'];
 
     /**
      * The attributes that should be casted to native types.
@@ -33,6 +33,7 @@ class GrupoDePreguntas extends Model
      * @var array
      */
     protected $casts = [
+        'visible' => 'boolean',
         'master' => 'boolean',
         'puede_duplicar' => 'boolean',
     ];

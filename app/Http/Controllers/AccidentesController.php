@@ -715,7 +715,7 @@ class AccidentesController extends Controller
             ->get();
 
         // Fusionar grupos master con grupos de la institución
-        $grupoPreguntas = $masters->merge($institucionales);
+        $grupoPreguntas = $masters->merge($institucionales)->where('visible', true);
 
         // Traer grupos anidados (si hay), sino, crear uno al vuelo
         $gruposAgrupados = [];
@@ -797,7 +797,7 @@ class AccidentesController extends Controller
             $subGrupos = [];
 
             // Agregar grupo "root"
-            if (isset($agrupado['id'])) {
+            if (isset($agrupado['id']) && isset($grupos[$agrupado['id']])) {
                 $subGrupos[] = $grupos[$agrupado['id']];
             }
 
@@ -808,6 +808,11 @@ class AccidentesController extends Controller
                         $subGrupos[] = $grupos[$subAgrupado['id']];
                     }
                 }
+            }
+
+            // Los grupos ocultos pueden seguir referenciados en el agrupamiento.
+            if (count($subGrupos) === 0) {
+                continue;
             }
 
             // Agregamos los grupos (y sus preguntas) a la sección
@@ -889,7 +894,9 @@ class AccidentesController extends Controller
         $institucion = Auth::user()->sede->institucion;
         $grupoIds = GrupoDePreguntas::where('master', 1)->pluck('id')
             ->merge($institucion->grupoDePreguntas()->pluck('grupos_de_preguntas.id'));
-        $preguntasCollection = Pregunta::whereIn('grupo_de_preguntas_id', $grupoIds)->get();
+        $preguntasCollection = Pregunta::whereIn('grupo_de_preguntas_id', $grupoIds)
+            ->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
+            ->get();
         $errores = $formulario->respuestas($respuestas, $preguntasCollection);
         if ($errores) {
             return response()->json(['status' => 'error', 'message' => 'Se encontraron errores.', 'payload' => $errores]);
@@ -1092,7 +1099,8 @@ class AccidentesController extends Controller
                 ->withMessages(['type' => 'error', 'text' => 'Disculpe, no cuenta con los permisos necesarios para poder modificar los datos de esta pregunta.']);
         }
 
-        $pregunta = Pregunta::findOrFail($preguntaId);
+        $pregunta = Pregunta::whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
+            ->findOrFail($preguntaId);
         $respuestas = Respuesta::where('accidente_id', $accidenteId)->where('pregunta_id', $preguntaId)->get();
 
         $this->params['title'] = 'ACCIDENTE &mdash; ' . $accidente->caratula;
@@ -1167,7 +1175,8 @@ class AccidentesController extends Controller
         }
 
         $usuarioId = Auth::user()->id;
-        $pregunta = Pregunta::findOrFail($preguntaId);
+        $pregunta = Pregunta::whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
+            ->findOrFail($preguntaId);
 
         // Validar respuestas
         $respuestas = $request->get('respuestas');
@@ -1431,6 +1440,11 @@ class AccidentesController extends Controller
         foreach ($ediciones as $edit) {
             if (!is_array($edit) || !isset($edit['agrupador'], $edit['preguntaId'], $edit['modoEdicion']) || !in_array($edit['modoEdicion'], ['agregar', 'modificar', 'borrar'])) {
                 return response()->json(['status' => 'error', 'message' => 'Edición inválida.']);
+            }
+            if (!Pregunta::where('id', $edit['preguntaId'])
+                ->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
+                ->exists()) {
+                return response()->json(['status' => 'error', 'message' => 'La pregunta no está disponible para edición.']);
             }
             $answers[$edit['agrupador']][$edit['preguntaId']] = $edit['modoEdicion'] === 'borrar' ? '' : ($edit['respuestaNueva'] ?? '');
         }

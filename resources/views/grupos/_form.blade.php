@@ -6,6 +6,10 @@
         {!! Form::label('descripcion', 'Descripcion:', ['class' => 'control-label']) !!}
         {!! Form::textarea('descripcion', null, ['class' => 'form-control', 'placeholder' => 'Descripción del Grupo de preguntas']) !!}
 
+        {!! Form::label('visible', 'Visible en los formularios de accidentes:', ['class' => 'control-label']) !!}
+        {!! Form::select('visible', [1 => 'Sí', 0 => 'No'], isset($params['data']['item']) ? null : 1, ['class' => 'form-control']) !!}
+        <span class="help-block">Determina si el grupo aparece al cargar o editar un accidente.</span>
+
         <div class="radio">
             <label>
                 {!! Form::radio('puede_duplicar', 1, null) !!} Este grupo <strong>se puede duplicar</strong> en la Interfaz de Carga
@@ -18,17 +22,6 @@
         </div>
     </div>
 </div>
-
-<!-- Tu código JavaScript -->
-<script>
-document.getElementById('siRadio').addEventListener('click', function() {
-    console.log('Seleccionaste "Sí", el valor de obligatorio es ahora 1');
-});
-
-document.getElementById('noRadio').addEventListener('click', function() {
-    console.log('Seleccionaste "No", el valor de obligatorio es ahora 0');
-});
-</script>
 
 <div class="panel-footer">
     <div class="row">

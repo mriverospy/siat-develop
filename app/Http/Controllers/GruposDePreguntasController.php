@@ -106,6 +106,7 @@ class GruposDePreguntasController extends Controller
         $gdp = new GrupoDePreguntas();
         $gdp->nombre = $data['nombre'];
         $gdp->descripcion = $data['descripcion'];
+        $gdp->visible = $request->boolean('visible');
 
         try {
             $gdp->save();

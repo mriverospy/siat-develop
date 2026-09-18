@@ -220,7 +220,7 @@ class AccidenteService
                             ->get();
 
         // Fusionar grupos master con grupos de la institución
-        $grupoPreguntas = $masters->merge($institucionales);
+        $grupoPreguntas = $masters->merge($institucionales)->where('visible', true);
 
         // Preparar los grupos de preguntas con sus preguntas
         $grupos = [];
