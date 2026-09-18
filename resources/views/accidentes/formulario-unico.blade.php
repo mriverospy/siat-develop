@@ -86,24 +86,7 @@
             <td class="col-underline">{{ $currentUser->sede->institucion->nombre }}</td>
         </tr>
     </table>
-    <table class="row">
-        <tr>
-            <td class="col-key" style="width: 105px;">Nro. Expediente:</td>
-            <td class="col-underline"></td>
-            <td class="" style="width: 10px;"></td>
-            <td class="col-key" style="width: 30px;">Otro:</td>
-            <td class="col-underline"></td>
-        </tr>
-    </table>
-    <table class="row">
-        <tr>
-            <td class="col-key" style="width: 140px;">Nro. Sumario Policial:</td>
-            <td class="col-underline"></td>
-            <td class="" style="width: 10px;"></td>
-            <td class="col-key" style="width: 30px;">Dependencia:</td>
-            <td class="col-underline"></td>
-        </tr>
-    </table>
+    
     <div class="no-break">
         <table class="row bordered">
             <tr>
@@ -154,8 +137,6 @@
                     </table>
                     <table class="row">
                         <tr>
-                            <td class="col-key" style="width: 90px;">Código Postal</td>
-                            <td class="col-underline"></td>
                             <td class="" style="width: 10px;"></td>
                             <td class="col-key" style="width: 60px;">Municipio</td>
                             <td class="col-underline"></td>

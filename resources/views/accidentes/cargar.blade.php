@@ -193,34 +193,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        {!! Form::label('expediente_judicial', 'Nro. Expediente:', ['class' => 'col-sm-2 control-label']) !!}
-                        <div class="col-sm-8">
-                            {!! Form::text('expediente_judicial', null, ['class' => 'form-control', 'placeholder' => 'Número de Expediente Judicial']) !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::label('sumario_policial', 'Nro. Sumario:', ['class' => 'col-sm-2 control-label']) !!}
-                        <div class="col-sm-8">
-                            {!! Form::text('sumario_policial', null, ['class' => 'form-control', 'placeholder' => 'Número de Sumario Policial']) !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::label('otro', 'Otro:', ['class' => 'col-sm-2 control-label']) !!}
-                        <div class="col-sm-8">
-                            {!! Form::text('otro', null, ['class' => 'form-control', 'placeholder' => '']) !!}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        {!! Form::label('dependencia', 'Dependencia:', ['class' => 'col-sm-2 control-label']) !!}
-                        <div class="col-sm-8">
-                            {!! Form::text('dependencia', null, ['class' => 'form-control', 'placeholder' => 'Dependencia']) !!}
-                        </div>
-                    </div>
-
+                    
                     <div class="form-group">
                         {!! Form::label('fecha_accidente', 'Fecha y Hora:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
@@ -230,19 +203,12 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('lugar', 'Ubicación del siniestro:', ['class' => 'col-sm-2 control-label']) !!}
+                        {!! Form::label('lugar', 'Dirección del siniestro:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             {!! Form::text('lugar', null, ['class' => 'form-control', 'placeholder' => 'Lugar o Dirección']) !!}
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        {!! Form::label('altura', 'Altura:', ['class' => 'col-sm-2 control-label']) !!}
-                        <div class="col-sm-8">
-                            {!! Form::text('altura', null, ['class' => 'form-control', 'placeholder' => 'Altura']) !!}
-                            <span class="help-block">Altura o Kilómetro</span>
-                        </div>
-                    </div>
 
                     @include('accidentes.partials.via-area', ['accidenteActual' => null, 'mostrarAvisoRequerido' => false])
 
@@ -268,7 +234,7 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('localidad', 'Localidad:', ['class' => 'col-sm-2 control-label']) !!}
+                        {!! Form::label('localidad', 'Barrio/Localidad:', ['class' => 'col-sm-2 control-label']) !!}
                         <div class="col-sm-8">
                             <select name="localidad_id" class="form-control" v-model="localidad_id">
                                 <option value="">Seleccione Localidad...</option>
@@ -278,12 +244,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        {!! Form::label('codigo_postal', 'Código Postal:', ['class' => 'col-sm-2 control-label']) !!}
-                        <div class="col-sm-8">
-                            {!! Form::text('codigo_postal', null, ['class' => 'form-control', 'placeholder' => 'Código Postal']) !!}
-                        </div>
-                    </div>
 
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Coordenadas</label>

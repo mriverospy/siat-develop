@@ -29,32 +29,20 @@
                     <dl class="dl-horizontal">
                         <dt>Carátula:</dt>
                         <dd>{{ $accidente->caratula }}</dd>
-                        <dt>Nro. Expendiente:</dt>
-                        <dd>{{ $accidente->expediente_judicial }}</dd>
-                        <dt>Nro. Sumario:</dt>
-                        <dd>{{ $accidente->sumario_policial }}</dd>
-                        <dt>Otro:</dt>
-                        <dd>{{ $accidente->otro }}</dd>
-                        <dt>Dependencia:</dt>
-                        <dd>{{ $accidente->dependencia }}</dd>
                         <dt>Fecha y Hora:</dt>
                         <dd>{{ $accidente->fecha_accidente->format('d/m/Y h:i a') }}</dd>
                         <dt>Lugar:</dt>
                         <dd>{{ $accidente->lugar }}</dd>
-                        <dt>Altura:</dt>
-                        <dd>{{ $accidente->altura }}</dd>
                         <dt>Tipo de vía:</dt>
                         <dd>{{ config('formulario_accidente.vias')[$accidente->tipo_camino] ?? ucwords($accidente->tipo_camino) }}</dd>
                         <dt>Área:</dt>
                         <dd>{{ config('formulario_accidente.areas')[$accidente->area] ?? 'Sin registrar' }}</dd>
-                        <dt>Localidad:</dt>
+                        <dt>Barrio/Localidad:</dt>
                         <dd>{{ $accidente->localidad->nombre }}</dd>
                         <dt>Distrito:</dt>
                         <dd>{{ $accidente->localidad->distrito->nombre }}</dd>
                         <dt>Departamento:</dt>
                         <dd>{{ $accidente->localidad->distrito->departamento->nombre }}</dd>
-                        <dt>Codigo Postal:</dt>
-                        <dd>{{ $accidente->codigo_postal }}</dd>
                         <dt>Heridos:</dt>
                         <dd>{{ $accidente->heridos }}</dd>
                         <dt>Fallecidos:</dt>

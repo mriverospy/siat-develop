@@ -188,33 +188,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            {!! Form::label('expediente_judicial', 'Nro. Expediente:', ['class' => 'col-sm-2 control-label']) !!}
-                            <div class="col-sm-8">
-                                {!! Form::text('expediente_judicial', $params['accidente']->expediente_judicial, ['class' => 'form-control', 'placeholder' => 'Número de Expediente Judicial']) !!}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::label('sumario_policial', 'Nro. Sumario:', ['class' => 'col-sm-2 control-label']) !!}
-                            <div class="col-sm-8">
-                                {!! Form::text('sumario_policial', $params['accidente']->sumario_policial, ['class' => 'form-control', 'placeholder' => 'Número de Sumario Policial']) !!}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::label('otro', 'Otro:', ['class' => 'col-sm-2 control-label']) !!}
-                            <div class="col-sm-8">
-                                {!! Form::text('otro', $params['accidente']->otro, ['class' => 'form-control', 'placeholder' => '']) !!}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::label('dependencia', 'Dependencia:', ['class' => 'col-sm-2 control-label']) !!}
-                            <div class="col-sm-8">
-                                {!! Form::text('dependencia', $params['accidente']->dependencia, ['class' => 'form-control', 'placeholder' => 'Dependencia']) !!}
-                            </div>
-                        </div>
 
                         <div class="form-group">
                             {!! Form::label('fecha_accidente', 'Fecha y Hora:', ['class' => 'col-sm-2 control-label']) !!}
@@ -231,18 +204,10 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            {!! Form::label('altura', 'Altura:', ['class' => 'col-sm-2 control-label']) !!}
-                            <div class="col-sm-8">
-                                {!! Form::text('altura', $params['accidente']->altura, ['class' => 'form-control', 'placeholder' => 'Altura']) !!}
-                                <span class="help-block">Altura o Kilómetro</span>
-                            </div>
-                        </div>
-
                         @include('accidentes.partials.via-area', ['accidenteActual' => $params['accidente']])
 
                         <div class="form-group">
-                            {!! Form::label('localidad', 'Localidad:', ['class' => 'col-sm-2 control-label']) !!}
+                            {!! Form::label('localidad', 'Barrio/Localidad:', ['class' => 'col-sm-2 control-label']) !!}
                             <div class="col-sm-8">
                                 <select name="localidad_id" class="select2" style="width: 100% !important">
                                     @foreach($params['localidades'] as $localidad)
@@ -254,13 +219,6 @@
                                     </option>
                                     @endforeach
                                 </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::label('codigo_postal', 'Código Postal:', ['class' => 'col-sm-2 control-label']) !!}
-                            <div class="col-sm-8">
-                                {!! Form::text('codigo_postal', $params['accidente']->codigo_postal, ['class' => 'form-control', 'placeholder' => 'Código Postal']) !!}
                             </div>
                         </div>
 
