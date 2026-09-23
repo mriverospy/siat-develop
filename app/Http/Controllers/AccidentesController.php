@@ -701,14 +701,14 @@ class AccidentesController extends Controller
         // Obtener grupos y preguntas masters
         $masters = GrupoDePreguntas::where('master', '=', 1)
             ->with(['preguntas' => function ($query) {
-                $query->orderBy('orden', 'asc');
+                $query->activas()->orderBy('orden', 'asc');
             }])
             ->get();
 
         // Obtener grupos y preguntas de la institución del usuario
         $institucionales = $institucion->grupoDePreguntas()
             ->with(['preguntas' => function ($query) {
-                $query->orderBy('orden', 'asc');
+                $query->activas()->orderBy('orden', 'asc');
             }])
             ->where('master', '=', 0)
             ->orderBy('orden')
@@ -894,7 +894,7 @@ class AccidentesController extends Controller
         $institucion = Auth::user()->sede->institucion;
         $grupoIds = GrupoDePreguntas::where('master', 1)->pluck('id')
             ->merge($institucion->grupoDePreguntas()->pluck('grupos_de_preguntas.id'));
-        $preguntasCollection = Pregunta::whereIn('grupo_de_preguntas_id', $grupoIds)
+        $preguntasCollection = Pregunta::activas()->with('detalles')->whereIn('grupo_de_preguntas_id', $grupoIds)
             ->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
             ->get();
         $errores = $formulario->respuestas($respuestas, $preguntasCollection);
@@ -1099,7 +1099,7 @@ class AccidentesController extends Controller
                 ->withMessages(['type' => 'error', 'text' => 'Disculpe, no cuenta con los permisos necesarios para poder modificar los datos de esta pregunta.']);
         }
 
-        $pregunta = Pregunta::whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
+        $pregunta = Pregunta::activas()->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
             ->findOrFail($preguntaId);
         $respuestas = Respuesta::where('accidente_id', $accidenteId)->where('pregunta_id', $preguntaId)->get();
 
@@ -1175,10 +1175,11 @@ class AccidentesController extends Controller
         }
 
         $usuarioId = Auth::user()->id;
-        $pregunta = Pregunta::whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
+        $pregunta = Pregunta::activas()->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
             ->findOrFail($preguntaId);
 
         // Validar respuestas
+        $historicas = Respuesta::where('accidente_id', $accidenteId)->where('pregunta_id', $preguntaId)->pluck('respuesta_texto');
         $respuestas = $request->get('respuestas');
         $errores = [];
 
@@ -1187,28 +1188,16 @@ class AccidentesController extends Controller
             foreach ($respuestas as $respuesta) {
                 $opciones = [];
 
-                // Validar preguntas tipo radio y check
-                if (in_array($pregunta->tipo, ['radio', 'check'])) {
-                    // Sólo validamos si no puede ingresar un valor distinto en "otro"
-                    // si puede, se deja abierto
-                    if ((int)$pregunta->mostrar_otro != 1) {
-                        $opciones = explode('|', $pregunta->opciones);
-
-                        if (is_array($respuesta)) {
-                            $respuestaValor = trim(current($respuesta));
-                        } else {
-                            $respuestaValor = trim($respuesta);
-                        }
-
-                        if ($respuestaValor != '') {
-                            if (!in_array($respuestaValor, $opciones)) {
-                                $errores[] = [
-                                    'pregunta_id' => $pregunta->id,
-                                    'grupo_pregunta_id' => $pregunta->grupo_de_preguntas_id,
-                                    'mensaje' => $pregunta->pregunta . ' sólo puede contener uno de los siguientes valores: ' . implode(',', $opciones) . '.',
-                                ];
-                            }
-                        }
+                // Permite conservar valores históricos, pero no agregar opciones retiradas.
+                foreach ((array) $respuesta as $valor) {
+                    if (!is_scalar($valor)) {
+                        $errores[] = ['pregunta_id' => $pregunta->id, 'mensaje' => 'Formato de respuesta inválido.'];
+                        continue;
+                    }
+                    $valor = trim((string) $valor);
+                    if ($valor !== '' && !$historicas->containsStrict($valor) && !$pregunta->permiteRespuesta($valor)) {
+                        $errores[] = ['pregunta_id' => $pregunta->id, 'grupo_pregunta_id' => $pregunta->grupo_de_preguntas_id,
+                            'mensaje' => $pregunta->pregunta.': opción inactiva o inválida.'];
                     }
                 }
 
@@ -1301,6 +1290,7 @@ class AccidentesController extends Controller
 
                         if ($respuestaValor != '') {
                             $res['respuesta_texto'] = $respuestaValor;
+                            $res['codigo'] = Respuesta::codigoConservado($respuestasModel, $pregunta->id, $respuestaValor);
                             $accidente->respuestas()->create($res);
                         }
                         break;
@@ -1324,12 +1314,14 @@ class AccidentesController extends Controller
                         if (is_array($respuesta)) {
                             foreach ($respuesta as $r) {
                                 $res['respuesta_texto'] = trim($r);
+                                $res['codigo'] = Respuesta::codigoConservado($respuestasModel, $pregunta->id, $res['respuesta_texto']);
                                 if ($res['respuesta_texto'] != '') {
                                     $accidente->respuestas()->create($res);
                                 }
                             }
                         } else {
                             $res['respuesta_texto'] = trim($respuesta);
+                            $res['codigo'] = Respuesta::codigoConservado($respuestasModel, $pregunta->id, $res['respuesta_texto']);
                             if ($res['respuesta_texto'] != '') {
                                 $accidente->respuestas()->create($res);
                             }
@@ -1441,7 +1433,7 @@ class AccidentesController extends Controller
             if (!is_array($edit) || !isset($edit['agrupador'], $edit['preguntaId'], $edit['modoEdicion']) || !in_array($edit['modoEdicion'], ['agregar', 'modificar', 'borrar'])) {
                 return response()->json(['status' => 'error', 'message' => 'Edición inválida.']);
             }
-            if (!Pregunta::where('id', $edit['preguntaId'])
+            if (!Pregunta::activas()->where('id', $edit['preguntaId'])
                 ->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
                 ->exists()) {
                 return response()->json(['status' => 'error', 'message' => 'La pregunta no está disponible para edición.']);
@@ -1452,8 +1444,8 @@ class AccidentesController extends Controller
             $ids = [];
             foreach ($answers as $group) $ids = array_merge($ids, array_keys($group));
             $groupIds = Pregunta::whereIn('id', $ids)->pluck('grupo_de_preguntas_id');
-            $questions = Pregunta::whereIn('grupo_de_preguntas_id', $groupIds)->get();
-            $errors = (new FormularioAccidente)->respuestas($answers, $questions);
+            $questions = Pregunta::with('detalles')->whereIn('grupo_de_preguntas_id', $groupIds)->get();
+            $errors = (new FormularioAccidente)->respuestas($answers, $questions, $original);
             if ($errors) return response()->json(['status' => 'error', 'message' => implode("\n", array_column($errors, 'mensaje'))]);
             // Descarta cambios y respuestas anteriores que ya no aplican al nuevo contexto.
             $ediciones = array_values(array_filter($ediciones, fn ($e) => array_key_exists($e['preguntaId'], $answers[$e['agrupador']] ?? [])));
@@ -1572,7 +1564,7 @@ class AccidentesController extends Controller
         // Obtener grupos y preguntas masters
         $masters = GrupoDePreguntas::where('master', '=', 1)
             ->with(['preguntas' => function ($query) {
-                $query->orderBy('orden', 'asc');
+                $query->activas()->orderBy('orden', 'asc');
             }])
             ->get();
 
@@ -1580,7 +1572,7 @@ class AccidentesController extends Controller
         $institucionales = Auth::user()->sede->institucion
             ->grupoDePreguntas()
             ->with(['preguntas' => function ($query) {
-                $query->orderBy('orden', 'asc');
+                $query->activas()->orderBy('orden', 'asc');
             }])
             ->where('master', '=', 0)
             ->orderBy('orden')
@@ -1645,7 +1637,7 @@ class AccidentesController extends Controller
         // Obtener grupos y preguntas masters
         $masters = GrupoDePreguntas::where('master', '=', 1)
             ->with(['preguntas' => function ($query) {
-                $query->orderBy('orden', 'asc');
+                $query->activas()->orderBy('orden', 'asc');
             }])
             ->get();
 
@@ -1653,7 +1645,7 @@ class AccidentesController extends Controller
         $institucionales = Auth::user()->sede->institucion
             ->grupoDePreguntas()
             ->with(['preguntas' => function ($query) {
-                $query->orderBy('orden', 'asc');
+                $query->activas()->orderBy('orden', 'asc');
             }])
             ->where('master', '=', 0)
             ->orderBy('orden')
@@ -1763,7 +1755,7 @@ class AccidentesController extends Controller
         // Obtener grupos y preguntas masters
         $masters = GrupoDePreguntas::where('master', '=', 1)
                     ->with(['preguntas' => function ($query) {
-                        $query->orderBy('orden', 'asc');
+                        $query->activas()->orderBy('orden', 'asc');
                     }])
                     ->get();
 
@@ -1771,7 +1763,7 @@ class AccidentesController extends Controller
         $institucionales = Auth::user()->sede->institucion
                             ->grupoDePreguntas()
                             ->with(['preguntas' => function ($query) {
-                                $query->orderBy('orden', 'asc');
+                                $query->activas()->orderBy('orden', 'asc');
                             }])
                             ->where('master', '=', 0)
                             ->orderBy('orden')
@@ -1884,7 +1876,7 @@ class AccidentesController extends Controller
         // Obtener grupos y preguntas masters
         $grupos = GrupoDePreguntas::where('nombre', 'Datos del Vehículo')
                     ->with(['preguntas' => function ($query) {
-                        $query->orderBy('orden', 'asc');
+                        $query->activas()->orderBy('orden', 'asc');
                     }])
                     ->get();
 
@@ -1958,7 +1950,7 @@ class AccidentesController extends Controller
         // Obtener grupos y preguntas masters
         $grupos = GrupoDePreguntas::where('nombre', 'Datos de la persona involucrada')
                     ->with(['preguntas' => function ($query) {
-                        $query->orderBy('orden', 'asc');
+                        $query->activas()->orderBy('orden', 'asc');
                     }])
                     ->get();
 

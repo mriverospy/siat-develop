@@ -48,7 +48,7 @@ class FormularioAccidente
     }
 
     // Valida todos los grupos recibidos, conservando las exigencias del catálogo.
-    public function respuestas(array &$answers, $questions): array
+    public function respuestas(array &$answers, $questions, array $originales = []): array
     {
         $errors = [];
         $questions = collect($questions)->keyBy('id');
@@ -74,6 +74,10 @@ class FormularioAccidente
             foreach ($questions as $q) {
                 if (!in_array($q->grupo_de_preguntas_id, $groupIds)) continue;
                 $id = (int) $q->id;
+                if (isset($q->activo) && !$q->activo) {
+                    if (array_key_exists($id, $group) && ($group[$id] !== ($originales[$key][$id] ?? null))) $error($id, 'Pregunta inactiva.');
+                    continue;
+                }
                 if (!self::aplica($id, $group, $vehicles)) { unset($group[$id]); continue; }
                 $value = self::valor($group[$id] ?? '');
                 $required = $q->obligatorio || in_array($id, config('formulario_accidente.obligatorias'));
@@ -88,7 +92,11 @@ class FormularioAccidente
                 foreach ($values as $v) {
                     $v = self::valor($v);
                     if (mb_strlen($v) > 255) $error($id, "{$q->pregunta}: máximo 255 caracteres.");
-                    if (in_array($q->tipo, ['radio','check']) && !$q->mostrar_otro && !in_array($v, explode('|', $q->opciones ?? ''), true)) $error($id, "{$q->pregunta}: opción inválida.");
+                    $historica = in_array($v, array_map([self::class, 'valor'], (array) ($originales[$key][$id] ?? [])), true);
+                    $permitida = $q instanceof \App\Models\Pregunta
+                        ? $q->permiteRespuesta($v)
+                        : ($q->mostrar_otro || in_array($v, explode('|', $q->opciones ?? ''), true));
+                    if (in_array($q->tipo, ['radio','check']) && !$historica && !$permitida) $error($id, "{$q->pregunta}: opción inactiva o inválida.");
                     if ($q->tipo === 'number' && !is_numeric($v)) $error($id, "{$q->pregunta}: ingrese un número.");
                     if ($q->tipo === 'date' && Validator::make(['date' => $v], ['date' => 'date_format:Y-m-d'])->fails()) $error($id, "{$q->pregunta}: fecha inválida.");
                 }
@@ -105,7 +113,7 @@ class FormularioAccidente
         }
         unset($group);
         // Evita omitir por completo un capítulo obligatorio.
-        foreach ($questions->groupBy('grupo_de_preguntas_id') as $groupQuestions) {
+        foreach ($questions->filter(fn ($q) => !isset($q->activo) || $q->activo)->groupBy('grupo_de_preguntas_id') as $groupQuestions) {
             if (!$groupQuestions->contains(fn ($q) => (bool)$q->obligatorio)) continue;
             $ids = $groupQuestions->pluck('id')->all();
             $present = false;

@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Accidente;
 use App\Models\GrupoDePreguntas;
 use App\Models\Respuesta;
+use App\Models\Pregunta;
+use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -101,6 +103,21 @@ class AccidenteService
             // iterar sobre todas las ediciones
             if($ediciones != null){
                 foreach ($ediciones as $edicion) {
+                    $pregunta = Pregunta::with('detalles')->find($edicion['preguntaId']);
+                    if (!$pregunta || !$pregunta->activo) {
+                        throw ValidationException::withMessages(['respuestas' => 'Pregunta inactiva o no permitida.']);
+                    }
+                    if ($edicion['modoEdicion'] !== 'borrar') {
+                        $historicas = $edicion['modoEdicion'] === 'modificar'
+                            ? Respuesta::where('accidente_id', $accidenteId)->where('pregunta_id', $pregunta->id)
+                                ->where('agrupador', $edicion['agrupador'])->pluck('respuesta_texto')->all()
+                            : [];
+                        foreach ((array) $edicion['respuestaNueva'] as $valor) {
+                            if (!is_scalar($valor) || (!in_array($valor, $historicas, true) && !$pregunta->permiteRespuesta($valor))) {
+                                throw ValidationException::withMessages(['respuestas' => 'Opción inactiva o no permitida.']);
+                            }
+                        }
+                    }
                     // agregar respuesta
                     if ($edicion['modoEdicion'] == 'agregar') {
                         if (is_array($edicion['respuestaNueva'])) {
@@ -143,9 +160,12 @@ class AccidenteService
                     if ($edicion['modoEdicion'] == 'modificar') {
                         if (is_array($edicion['respuestaNueva'])) {
                             // si son varias respuestas, borrar las existentes y agregar las nuevas
+                            $anteriores = Respuesta::where('accidente_id', $accidenteId)
+                                ->where('pregunta_id', $edicion['preguntaId'])
+                                ->where('agrupador', $edicion['agrupador'])->get();
                             Respuesta::where('accidente_id', $accidenteId)
                                 ->where('pregunta_id', $edicion['preguntaId'])
-                                ->delete();
+                                ->where('agrupador', $edicion['agrupador'])->delete();
 
                             // agregar las nuevas respuestas
                             foreach ($edicion['respuestaNueva'] as $nuevaRespuesta) {
@@ -157,6 +177,7 @@ class AccidenteService
                                     'pregunta_texto' => $edicion['pregunta'],
                                     'pregunta_tipo' => $edicion['tipoPregunta'],
                                     'respuesta_texto' => $nuevaRespuesta,
+                                    'codigo' => Respuesta::codigoConservado($anteriores, $edicion['preguntaId'], $nuevaRespuesta),
                                 ]);
                             }
                         } else {
@@ -170,12 +191,12 @@ class AccidenteService
                                 $campo = 'respuesta_fecha';
                             }
 
-                            Respuesta::where('accidente_id', $accidenteId)
+                            $anteriores = Respuesta::where('accidente_id', $accidenteId)
                                 ->where('pregunta_id', $edicion['preguntaId'])
-                                ->where('agrupador', $edicion['agrupador'])
-                                ->update([
-                                    $campo => $edicion['respuestaNueva'],
-                                ]);
+                                ->where('agrupador', $edicion['agrupador'])->get();
+                            foreach ($anteriores as $respuesta) {
+                                $respuesta->update([$campo => $edicion['respuestaNueva']]);
+                            }
                         }
                     }
 
@@ -202,7 +223,7 @@ class AccidenteService
         $masters = GrupoDePreguntas::where('master', '=', 1)
                     ->with([
                         'preguntas' => function ($query) {
-                            $query->orderBy('orden', 'asc');
+                            $query->activas()->orderBy('orden', 'asc');
                         },
                     ])
                     ->get();
@@ -212,7 +233,7 @@ class AccidenteService
         $institucionales = $this->user->sede->institucion->grupoDePreguntas()
                             ->with([
                                 'preguntas' => function ($query) {
-                                    $query->orderBy('orden', 'asc');
+                                    $query->activas()->orderBy('orden', 'asc');
                                 },
                             ])
                             ->where('master', '=', 0)

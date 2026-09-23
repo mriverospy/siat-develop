@@ -11,6 +11,33 @@ class Respuesta extends Model
 
     protected $revisionCreationsEnabled = true;
 
+    protected static function booted()
+    {
+        static::saving(function (Respuesta $respuesta) {
+            if (!$respuesta->exists && array_key_exists('codigo', $respuesta->getAttributes())) return;
+            if (!$respuesta->exists || $respuesta->isDirty(['pregunta_id', 'respuesta_texto', 'pregunta_tipo'])) {
+                $respuesta->codigo = static::codigoPara($respuesta->pregunta_id, $respuesta->respuesta_texto);
+            }
+        });
+    }
+
+    public static function codigoConservado($anteriores, $preguntaId, $texto)
+    {
+        $anterior = $anteriores->first(fn ($respuesta) => $respuesta->respuesta_texto === $texto);
+        return $anterior ? $anterior->codigo : static::codigoPara($preguntaId, $texto);
+    }
+
+    public static function codigoPara($preguntaId, $texto)
+    {
+        if ($texto === null || $texto === '') return null;
+        $pregunta = Pregunta::find($preguntaId);
+        if (!$pregunta || !in_array($pregunta->tipo, ['radio', 'check'])) return null;
+        // Comparación exacta en PHP, independiente de la collation de la base.
+        $detalles = $pregunta->detalles()->where('activo', true)->get()
+            ->filter(fn ($detalle) => $detalle->opcion === $texto);
+        return $detalles->count() === 1 ? $detalles->first()->codigo : null;
+    }
+
     /**
      * Campos de Asignacion Masiva
      *
@@ -18,6 +45,7 @@ class Respuesta extends Model
      */
     protected $fillable = [
         'pregunta_id',
+        'codigo',
         'accidente_id',
         'usuario_id',
         'agrupador',

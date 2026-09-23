@@ -94,7 +94,7 @@ class WebService
         $institucionales = $user->sede->institucion
                             ->grupoDePreguntas()
                             ->with(['preguntas' => function ($query) {
-                                $query->orderBy('orden', 'asc');
+                                $query->activas()->orderBy('orden', 'asc');
                             }])
                             ->where('master', '=', 0)
                             ->orderBy('orden')
@@ -102,7 +102,7 @@ class WebService
 
         $masters = GrupoDePreguntas::where('master', '=', 1)
                     ->with(['preguntas' => function ($query) {
-                        $query->orderBy('orden', 'asc');
+                        $query->activas()->orderBy('orden', 'asc');
                     }])
                     //->union($institucionales)
                     ->get();
@@ -285,17 +285,27 @@ class WebService
             }
             $preguntasIds = array_unique($preguntasIds);
 
-            $preguntasCollection = Pregunta::find($preguntasIds);
+            $preguntasCollection = Pregunta::activas()->with('detalles')->find($preguntasIds);
             $preguntas = [];
             foreach ($preguntasCollection as $pregunta) {
                 $preguntas[$pregunta->id] = $pregunta->toArray();
+            }
+
+            $catalogo = $preguntasCollection->keyBy('id');
+            foreach ($respuestas as $respuesta) {
+                $pregunta = $catalogo->get($respuesta['pregunta_id']);
+                if (!$pregunta || !is_scalar($respuesta['respuesta']) || !$pregunta->permiteRespuesta($respuesta['respuesta'])) {
+                    $this->respuesta['message'] = 'Pregunta u opción inactiva o no permitida.';
+                    DB::rollBack();
+                    return $this->respuesta;
+                }
             }
 
             // Guardar respuestas
             foreach ($respuestas as $respuesta) {
                 //Valida que no sea una cadena vacia
                 if ($respuesta['respuesta'] == '') {
-                    $this->respuesta['message'] = 'No se han recibido los campos obligatorios para la respuesta: ' + $respuesta;
+                    $this->respuesta['message'] = 'No se han recibido los campos obligatorios para la respuesta.';
                     DB::rollBack();
 
                     return $this->respuesta;

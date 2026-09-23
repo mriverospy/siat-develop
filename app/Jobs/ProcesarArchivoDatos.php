@@ -6,6 +6,7 @@ use App\Models\Accidente;
 use App\Models\Notificacion;
 use App\Models\Pregunta;
 use DateTime;
+use Illuminate\Database\QueryException;
 use DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -72,16 +73,6 @@ class ProcesarArchivoDatos extends Job implements ShouldQueue
             ];
         }
 
-        // Guardar Accidente
-        try {
-            $accidente = Accidente::create($accidente);
-        } catch (QueryException $e) {
-            return [
-                'estado' => false,
-                'errores' => [$e->getMessage()],
-            ];
-        }
-
         // Validar respuestas
         $preguntaIds = [];
         foreach ($respuestas as $respuesta) {
@@ -90,7 +81,7 @@ class ProcesarArchivoDatos extends Job implements ShouldQueue
             }
         }
 
-        $preguntasCollection = Pregunta::find($preguntaIds);
+        $preguntasCollection = Pregunta::activas()->with('detalles')->find($preguntaIds);
         $preguntas = [];
         foreach ($preguntasCollection as $pregunta) {
             $preguntas[$pregunta->id] = $pregunta->toArray();
@@ -100,6 +91,11 @@ class ProcesarArchivoDatos extends Job implements ShouldQueue
             foreach ($respuestas as $respuesta) {
                 $opciones = [];
 
+                $modelo = $preguntasCollection->firstWhere('id', $respuesta['pregunta_id']);
+                if (!$modelo || !is_scalar($respuesta['valor']) || !$modelo->permiteRespuesta($respuesta['valor'])) {
+                    $errores[] = 'Pregunta u opción inactiva o no permitida: '.$respuesta['pregunta_id'];
+                    continue;
+                }
                 $pregunta = $preguntas[$respuesta['pregunta_id']];
 
                 // Validar preguntas tipo radio y check
@@ -148,6 +144,16 @@ class ProcesarArchivoDatos extends Job implements ShouldQueue
             return [
                 'estado' => false,
                 'errores' => $errores,
+            ];
+        }
+
+        // Guardar Accidente
+        try {
+            $accidente = Accidente::create($accidente);
+        } catch (QueryException $e) {
+            return [
+                'estado' => false,
+                'errores' => [$e->getMessage()],
             ];
         }
 

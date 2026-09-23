@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Session;
+use Illuminate\Support\Facades\DB;
 
 class PreguntasController extends Controller
 {
@@ -103,11 +104,15 @@ class PreguntasController extends Controller
                 ->withMessages(['type' => 'error', 'text' => 'El grupo de preguntas seleccionado es inválido!!!']);
         }
 
-        $new = $request->all();
+        $new = $request->except('detalles');
+        if ($request->has('detalles')) unset($new['opciones']);
         $new['orden'] = $this->params['data']['grupo']->preguntas()->ordenActual();
 
         try {
-            $this->params['data']['grupo']->preguntas()->create($new);
+            DB::transaction(function () use ($new, $request) {
+                $pregunta = $this->params['data']['grupo']->preguntas()->create($new);
+                if ($request->has('detalles')) $pregunta->guardarDetalles($request->input('detalles'));
+            });
         } catch (QueryException $e) {
             return redirect($this->params['route'])
                 ->withMessages(['type' => 'error', 'text' => 'No se pudo agregar el nuevo registro!!!']);
@@ -188,7 +193,8 @@ class PreguntasController extends Controller
 
         // Actualiza
         try {
-            $data = $request->all();
+            $data = $request->except('detalles');
+            if ($request->has('detalles')) unset($data['opciones']);
 
             if (! isset($data['mostrar_selector'])) {
                 $data['mostrar_selector'] = false;
@@ -199,7 +205,10 @@ class PreguntasController extends Controller
             $data['obligatorio'] = isset($data['obligatorio']) && (int)$data['obligatorio'] == 1;
 
 
-            $row->update($data);
+            DB::transaction(function () use ($row, $data, $request) {
+                $row->update($data);
+                if ($request->has('detalles')) $row->guardarDetalles($request->input('detalles'));
+            });
         } catch (QueryException $e) {
             return redirect($this->params['route'])
                 ->withMessages(['type' => 'error', 'text' => 'Las modificaciones No fueron guardadas!!!']);

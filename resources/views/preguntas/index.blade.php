@@ -65,7 +65,7 @@
                                     <a href="{{ url($params['route'], [$item->id, 'edit']) }}" class="button-icon" data-toggle="tooltip" data-placement="top" title="Editar esta Pregunta"><i class="fa fa-pencil"></i></a>
                                 @endif
                             </div>
-                            <h2>{{ $item->pregunta }} (ID: {{ $item->id }})</h2>
+                            <h2>@if ($item->codigo)<span class="label label-info">{{ $item->codigo }}</span> @endif{{ $item->pregunta }} (ID: {{ $item->id }})</h2>
                         </div>
                     </div>
                 @endforeach
