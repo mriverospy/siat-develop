@@ -1,5 +1,5 @@
 <div class="form-group">
-    <label class="col-sm-2 control-label" for="tipo_camino">Tipo de vía:</label>
+    <label class="col-sm-{{ $columnasEtiqueta ?? 2 }} control-label" for="tipo_camino">Tipo de vía:</label>
     <div class="col-sm-8">
         <select name="tipo_camino" id="tipo_camino" class="form-control" required>
             <option value="">Seleccionar...</option>
@@ -16,7 +16,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-2 control-label" for="area">Área:</label>
+    <label class="col-sm-{{ $columnasEtiqueta ?? 2 }} control-label" for="area">Área:</label>
     <div class="col-sm-8">
         <select name="area" id="area" class="form-control" required>
             <option value="">Seleccionar...</option>

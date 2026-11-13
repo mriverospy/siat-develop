@@ -2,6 +2,7 @@
 
 @section('header-css')
     @parent
+    <link rel="stylesheet" href="{{ asset('css/bloque-24-horas.css') }}?v={{ filemtime(public_path('css/bloque-24-horas.css')) }}">
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css">
     <link rel="stylesheet" href="{{ asset('css/sweet-alert.css') }}">
 @endsection
@@ -180,34 +181,34 @@
                     </ul>
                 </div>
                 <div class="panel-body" v-show="modoEdicion == 'bloque'">
-                    <div class="form-horizontal row-border">
-                        <div class="form-group">
-                            {!! Form::label('caratula', 'Carátula:', ['class' => 'col-sm-2 control-label']) !!}
+                    <div class="form-horizontal row-border bloque24-form">
+                        <h4 class="bloque24-separador">Datos administrativos</h4>
+                    <div class="form-group">
+                            {!! Form::label('caratula', 'Carátula:', ['class' => 'col-sm-4 control-label']) !!}
                             <div class="col-sm-8">
                                 {!! Form::text('caratula', $params['accidente']->caratula, ['class' => 'form-control', 'placeholder' => 'Carátula']) !!}
                             </div>
                         </div>
 
 
-                        <div class="form-group">
-                            {!! Form::label('fecha_accidente', 'Fecha y Hora:', ['class' => 'col-sm-2 control-label']) !!}
-                            <div class="col-sm-8">
-                                {!! Form::text('fecha_accidente', $params['accidente']->fecha_accidente, ['class' => 'form-control datetime-picker', 'placeholder' => 'Fecha y Hora del Accidente', 'data-date-language' => 'es']) !!}
-                                <span class="help-block">Fecha y Hora del Accidente</span>
-                            </div>
-                        </div>
+                        <h4 class="bloque24-separador">Datos del siniestro</h4>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Identificador SIAT:</label>
+                        <div class="col-sm-8"><p class="form-control-static">{{ $params['accidente']->codigo_siat ?? 'Se asignará al guardar' }}</p></div>
+                    </div>
+                    @include('accidentes.partials.fecha-hora', ['accidenteActual' => $params['accidente'], 'columnasEtiqueta' => 4])
 
-                        <div class="form-group">
-                            {!! Form::label('lugar', 'Lugar:', ['class' => 'col-sm-2 control-label']) !!}
+                    <div class="form-group">
+                            {!! Form::label('lugar', 'Dirección:', ['class' => 'col-sm-4 control-label']) !!}
                             <div class="col-sm-8">
                                 {!! Form::text('lugar', $params['accidente']->lugar, ['class' => 'form-control', 'placeholder' => 'Lugar o Dirección']) !!}
                             </div>
                         </div>
 
-                        @include('accidentes.partials.via-area', ['accidenteActual' => $params['accidente']])
+                        @include('accidentes.partials.via-area', ['accidenteActual' => $params['accidente'], 'columnasEtiqueta' => 4])
 
                         <div class="form-group">
-                            {!! Form::label('localidad', 'Barrio/Localidad:', ['class' => 'col-sm-2 control-label']) !!}
+                            {!! Form::label('localidad', 'Barrio/Localidad:', ['class' => 'col-sm-4 control-label']) !!}
                             <div class="col-sm-8">
                                 <select name="localidad_id" class="select2" style="width: 100% !important">
                                     @foreach($params['localidades'] as $localidad)
@@ -223,44 +224,38 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Coordenadas</label>
-                            <div class="col-sm-4">
-                                {!! Form::text('gps_latitud', $params['accidente']->gps_latitud, ['class' => 'form-control', 'readonly' => true, 'required' => true]) !!}
-                            </div>
-                            <div class="col-sm-4">
-                                {!! Form::text('gps_longitud', $params['accidente']->gps_longitud, ['class' => 'form-control', 'readonly' => true, 'required' => true]) !!}
-                            </div>
-                            <div class="col-sm-10 col-sm-offset-2">
+                            @include('accidentes.partials.coordenadas-campos', ['accidenteActual' => $params['accidente'], 'columnasEtiqueta' => 4])
+                        <div class="col-sm-8 col-sm-offset-4 bloque24-mapa">
                                 <p class="help-block"><small>Para ubicar el accidente en el mapa, sólo debe hacer click en el mapa y arrastrarlo hasta que el marcador rojo quede exactamente en el lugar donde ocurrió el accidente. Puede utilizar el control de zoom a la derecha (botones "+" y "-") para acercar o alejar más el mapa.</small></p>
                                 <div id="coordenadas-accidentes"><small>Cargando mapa...</small></div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('heridos', 'Heridos:', ['class' => 'col-sm-2 control-label']) !!}
+                            {!! Form::label('heridos', 'Heridos:', ['class' => 'col-sm-4 control-label']) !!}
                             <div class="col-sm-8">
-                                {!! Form::text('heridos', $params['accidente']->heridos, ['class' => 'form-control', 'placeholder' => 'Cantidad de Heridos']) !!}
+                                {!! Form::text('heridos', $params['accidente']->heridos, ['class' => 'form-control', 'readonly' => true, 'placeholder' => 'Cantidad de Heridos']) !!}
                             </div>
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('fallecidos', 'Fallecidos:', ['class' => 'col-sm-2 control-label']) !!}
+                            {!! Form::label('fallecidos', 'Fallecidos:', ['class' => 'col-sm-4 control-label']) !!}
                             <div class="col-sm-8">
-                                {!! Form::text('fallecidos', $params['accidente']->fallecidos, ['class' => 'form-control', 'placeholder' => 'Cantidad de Fallecidos']) !!}
+                                {!! Form::text('fallecidos', $params['accidente']->fallecidos, ['class' => 'form-control', 'readonly' => true, 'placeholder' => 'Cantidad de Fallecidos']) !!}
                             </div>
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('ilesos', 'Ilesos:', ['class' => 'col-sm-2 control-label']) !!}
+                            {!! Form::label('ilesos', 'Ilesos:', ['class' => 'col-sm-4 control-label']) !!}
                             <div class="col-sm-8">
-                                {!! Form::text('ilesos', $params['accidente']->ilesos, ['class' => 'form-control', 'placeholder' => 'Cantidad de Ilesos']) !!}
+                                {!! Form::text('ilesos', $params['accidente']->ilesos, ['class' => 'form-control', 'readonly' => true, 'placeholder' => 'Cantidad de Ilesos']) !!}
                             </div>
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('participantes_siniestro', 'Participantes:', ['class' => 'col-sm-2 control-label']) !!}
+                            {!! Form::label('participantes_siniestro', 'Participantes:', ['class' => 'col-sm-4 control-label']) !!}
                             <div class="col-sm-8">
-                                {!! Form::text('participantes_siniestro', $params['accidente']->participantes_siniestro, ['class' => 'form-control', 'placeholder' => 'Cantidad de Participantes']) !!}
+                                {!! Form::text('participantes_siniestro', $params['accidente']->participantes_siniestro, ['class' => 'form-control', 'readonly' => true, 'placeholder' => 'Cantidad de Participantes']) !!}
                             </div>
                         </div>
                     </div>
@@ -343,7 +338,7 @@
 
 @section('after-app-javascript')
     @parent
-    <script src="{{ asset('js/editar_accidente.js?id=form70-2026') }}"></script>
+    <script src="{{ asset('js/editar_accidente.js') }}?v={{ filemtime(public_path('js/editar_accidente.js')) }}"></script>
 @endsection
 
 @section('footer-javascript')

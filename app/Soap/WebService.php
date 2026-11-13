@@ -294,7 +294,7 @@ class WebService
             $catalogo = $preguntasCollection->keyBy('id');
             foreach ($respuestas as $respuesta) {
                 $pregunta = $catalogo->get($respuesta['pregunta_id']);
-                if (!$pregunta || !is_scalar($respuesta['respuesta']) || !$pregunta->permiteRespuesta($respuesta['respuesta'])) {
+                if (!$pregunta || \App\Services\Bloque24Horas::esPregunta($pregunta) || !is_scalar($respuesta['respuesta']) || !$pregunta->permiteRespuesta($respuesta['respuesta'])) {
                     $this->respuesta['message'] = 'Pregunta u opción inactiva o no permitida.';
                     DB::rollBack();
                     return $this->respuesta;

@@ -12,6 +12,21 @@ class Accidente extends Model
 
     protected $revisionCreationsEnabled = true;
 
+    // La cabecera compatible y las respuestas del bloque son una sola operación.
+    public function save(array $options = [])
+    {
+        return $this->getConnection()->transaction(fn () => parent::save($options));
+    }
+
+    protected static function booted()
+    {
+        static::saved(function (Accidente $accidente) {
+            if (\Illuminate\Support\Facades\Schema::hasColumn('accidentes', 'codigo_siat')) {
+                app(\App\Services\Bloque24Horas::class)->sincronizar($accidente);
+            }
+        });
+    }
+
     /**
      * Campos de Asignacion Masiva
      *

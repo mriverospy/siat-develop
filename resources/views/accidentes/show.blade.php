@@ -27,7 +27,9 @@
                 </div>
                 <div class="panel-body">
                     <dl class="dl-horizontal">
-                        <dt>Carátula:</dt>
+                        <dt>Identificador SIAT (A_1):</dt>
+                        <dd>{{ $accidente->codigo_siat ?? "Pendiente de asignación" }}</dd>
+                        <dt>Carátula (CA):</dt>
                         <dd>{{ $accidente->caratula }}</dd>
                         <dt>Fecha y Hora:</dt>
                         <dd>{{ $accidente->fecha_accidente->format('d/m/Y h:i a') }}</dd>

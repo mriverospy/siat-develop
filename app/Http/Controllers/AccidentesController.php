@@ -19,6 +19,7 @@ use App\Models\Respuesta;
 use App\Models\Sede;
 use App\Models\Usuario;
 use App\Services\AccidenteService;
+use App\Services\Bloque24Horas;
 use App\Services\FormularioAccidente;
 use App\Settings\GeneralSettings;
 use Auth;
@@ -194,6 +195,7 @@ class AccidentesController extends Controller
         $respuestas = [];
         if ($accidente->respuestas->count() > 0) {
             foreach ($accidente->respuestas as $respuesta) {
+                if (Bloque24Horas::esPregunta($respuesta->pregunta)) continue;
                 $indexKey = implode('_', [$respuesta->pregunta->grupoDePreguntas->id, $respuesta->agrupador]);
                 $respuestas[$indexKey]['grupo'] = $respuesta->pregunta->grupoDePreguntas->nombre;
                 $respuestas[$indexKey]['respuestas'][$respuesta->pregunta->orden][$respuesta->pregunta_texto][] = $respuesta;
@@ -239,6 +241,7 @@ class AccidentesController extends Controller
         $respuestas = [];
         if ($accidente->respuestas->count() > 0) {
             foreach ($accidente->respuestas as $respuesta) {
+                if (Bloque24Horas::esPregunta($respuesta->pregunta)) continue;
                 $indexKey = implode('_', [$respuesta->pregunta->grupoDePreguntas->id, $respuesta->agrupador]);
                 $respuestas[$indexKey]['grupo'] = $respuesta->pregunta->grupoDePreguntas->nombre;
                 $respuestas[$indexKey]['respuestas'][$respuesta->pregunta->orden][$respuesta->pregunta_texto][] = $respuesta;
@@ -584,6 +587,7 @@ class AccidentesController extends Controller
 
         // Obtener grupos y preguntas masters
         $masters = GrupoDePreguntas::where('master', '=', 1)
+            ->where('nombre', '<>', Bloque24Horas::NOMBRE)->orderBy('orden')->orderBy('id')
             ->with(['preguntas' => function ($query) {
                 $query->orderBy('orden', 'asc');
             }])
@@ -700,6 +704,7 @@ class AccidentesController extends Controller
 
         // Obtener grupos y preguntas masters
         $masters = GrupoDePreguntas::where('master', '=', 1)
+            ->where('nombre', '<>', Bloque24Horas::NOMBRE)->orderBy('orden')->orderBy('id')
             ->with(['preguntas' => function ($query) {
                 $query->activas()->orderBy('orden', 'asc');
             }])
@@ -715,7 +720,8 @@ class AccidentesController extends Controller
             ->get();
 
         // Fusionar grupos master con grupos de la institución
-        $grupoPreguntas = $masters->merge($institucionales)->where('visible', true);
+        $grupoPreguntas = $masters->merge($institucionales)->where('visible', true)
+            ->reject(fn ($grupo) => $grupo->nombre === Bloque24Horas::NOMBRE);
 
         // Traer grupos anidados (si hay), sino, crear uno al vuelo
         $gruposAgrupados = [];
@@ -856,6 +862,12 @@ class AccidentesController extends Controller
 
         $usuarioId = Auth::user()->id;
 
+        try {
+            $request->replace(app(Bloque24Horas::class)->normalizar($request->all()));
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['status' => 'error', 'message' => 'Se encontraron errores.',
+                'payload' => array_map(fn ($mensaje) => ['pregunta_id' => null, 'grupo_pregunta_id' => null, 'mensaje' => $mensaje], $e->validator->errors()->all())]);
+        }
         $formulario = new FormularioAccidente;
         $validator = $formulario->cabecera($request->all());
         $validator->after(function ($validator) use ($request) {
@@ -895,7 +907,7 @@ class AccidentesController extends Controller
         $grupoIds = GrupoDePreguntas::where('master', 1)->pluck('id')
             ->merge($institucion->grupoDePreguntas()->pluck('grupos_de_preguntas.id'));
         $preguntasCollection = Pregunta::activas()->with('detalles')->whereIn('grupo_de_preguntas_id', $grupoIds)
-            ->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
+            ->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true)->where('nombre', '<>', Bloque24Horas::NOMBRE))
             ->get();
         $errores = $formulario->respuestas($respuestas, $preguntasCollection);
         if ($errores) {
@@ -1174,6 +1186,9 @@ class AccidentesController extends Controller
                 ->withMessages(['type' => 'error', 'text' => 'Disculpe, no cuenta con los permisos necesarios para poder modificar los datos de esta pregunta.']);
         }
 
+        if (Bloque24Horas::esPregunta(Pregunta::find($preguntaId))) {
+            return redirect('accidentes/'.$accidenteId)->withMessages(['type' => 'error', 'text' => 'Modifique estos datos desde el Bloque 24 horas.']);
+        }
         $usuarioId = Auth::user()->id;
         $pregunta = Pregunta::activas()->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
             ->findOrFail($preguntaId);
@@ -1416,7 +1431,28 @@ class AccidentesController extends Controller
             ], 200);
         }
 
+        try {
+            $datos = app(Bloque24Horas::class)->normalizar($request->input('accidente', []));
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['status' => 'error', 'message' => implode("\n", $e->validator->errors()->all())]);
+        }
+        $request->merge(['accidente' => $datos]);
         $validator = (new FormularioAccidente)->cabecera($request->input('accidente', []), true);
+        $validator->after(function ($validator) use ($datos, $accidenteId) {
+            if ($validator->errors()->isNotEmpty()) return;
+            $anterior = Accidente::findOrFail($accidenteId);
+            $cambio = (int) $datos['localidad_id'] !== (int) $anterior->localidad_id
+                || (float) $datos['gps_latitud'] !== (float) $anterior->gps_latitud
+                || (float) $datos['gps_longitud'] !== (float) $anterior->gps_longitud;
+            if (!$cambio) return;
+            $localidad = Localidad::with('distrito')->findOrFail($datos['localidad_id']);
+            $geografia = array_merge($datos, [
+                'departamento_id' => $localidad->distrito->departamento_id,
+                'distrito_id' => $localidad->distrito_id,
+            ]);
+            $error = app(\App\Services\GeografiaAccidente::class)->validar($geografia);
+            if ($error) $validator->errors()->add('gps_latitud', $error);
+        });
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => implode("\n", $validator->errors()->all())]);
         }
@@ -1425,7 +1461,7 @@ class AccidentesController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Formato de ediciones inválido.']);
         }
         $answers = [];
-        foreach (Respuesta::where('accidente_id', $accidenteId)->get() as $row) {
+        foreach (Respuesta::where('accidente_id', $accidenteId)->whereHas('pregunta.grupoDePreguntas', fn ($q) => $q->where('nombre', '<>', Bloque24Horas::NOMBRE))->get() as $row) {
             $answers[$row->agrupador][$row->pregunta_id][] = $row->respuesta_texto ?? $row->respuesta_numero ?? ($row->respuesta_fecha ? $row->respuesta_fecha->format('Y-m-d') : '');
         }
         $original = $answers;
@@ -1434,7 +1470,7 @@ class AccidentesController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Edición inválida.']);
             }
             if (!Pregunta::activas()->where('id', $edit['preguntaId'])
-                ->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true))
+                ->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true)->where('nombre', '<>', Bloque24Horas::NOMBRE))
                 ->exists()) {
                 return response()->json(['status' => 'error', 'message' => 'La pregunta no está disponible para edición.']);
             }
@@ -1457,7 +1493,7 @@ class AccidentesController extends Controller
                 }
             }
         }
-        $cabecera = $request->get('accidente');
+        $cabecera = array_intersect_key($request->get('accidente'), array_flip(['caratula', 'expediente_judicial', 'sumario_policial', 'otro', 'dependencia', 'fecha_accidente', 'lugar', 'altura', 'tipo_camino', 'area', 'localidad_id', 'codigo_postal', 'gps_latitud', 'gps_longitud', 'heridos', 'fallecidos', 'ilesos', 'participantes_siniestro']));
         $gravedades = [];
         foreach ($answers as $group) {
             if (isset($group[134])) $gravedades[] = FormularioAccidente::valor($group[134]);
@@ -1563,6 +1599,7 @@ class AccidentesController extends Controller
 
         // Obtener grupos y preguntas masters
         $masters = GrupoDePreguntas::where('master', '=', 1)
+            ->where('nombre', '<>', Bloque24Horas::NOMBRE)->orderBy('orden')->orderBy('id')
             ->with(['preguntas' => function ($query) {
                 $query->activas()->orderBy('orden', 'asc');
             }])
@@ -1636,6 +1673,7 @@ class AccidentesController extends Controller
 
         // Obtener grupos y preguntas masters
         $masters = GrupoDePreguntas::where('master', '=', 1)
+            ->where('nombre', '<>', Bloque24Horas::NOMBRE)->orderBy('orden')->orderBy('id')
             ->with(['preguntas' => function ($query) {
                 $query->activas()->orderBy('orden', 'asc');
             }])
@@ -1754,6 +1792,7 @@ class AccidentesController extends Controller
 
         // Obtener grupos y preguntas masters
         $masters = GrupoDePreguntas::where('master', '=', 1)
+            ->orderBy('orden')->orderBy('id')
                     ->with(['preguntas' => function ($query) {
                         $query->activas()->orderBy('orden', 'asc');
                     }])
@@ -2222,6 +2261,7 @@ class AccidentesController extends Controller
 
         // Obtener grupos y preguntas masters
         $masters = GrupoDePreguntas::where('master', '=', 1)
+            ->orderBy('orden')->orderBy('id')
             ->with(['preguntas' => function ($query) {
                 $query->orderBy('orden', 'asc');
             }])

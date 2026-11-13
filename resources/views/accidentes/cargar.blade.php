@@ -180,40 +180,40 @@
     </script>
 
     <script type="x/template" id="cabecera">
-        <div class="panel panel-brown">
+        <div class="panel panel-grape">
             <div class="panel-heading">
-                <h2>Bloque 24 Horas</h2>
+                <h2>Bloque 24 horas</h2>
             </div>
             <div class="panel-body">
-                <div class="form-horizontal row-border">
+                <div class="form-horizontal row-border bloque24-form">
+                    <h4 class="bloque24-separador">Datos administrativos</h4>
                     <div class="form-group">
-                        {!! Form::label('caratula', 'Carátula:', ['class' => 'col-sm-2 control-label']) !!}
+                        {!! Form::label('caratula', 'Carátula:', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-8">
                             {!! Form::text('caratula', null, ['class' => 'form-control', 'placeholder' => 'Carátula']) !!}
                         </div>
                     </div>
 
-                    
+
+                    <h4 class="bloque24-separador">Datos del siniestro</h4>
                     <div class="form-group">
-                        {!! Form::label('fecha_accidente', 'Fecha y Hora:', ['class' => 'col-sm-2 control-label']) !!}
-                        <div class="col-sm-8">
-                            {!! Form::text('fecha_accidente', null, ['class' => 'form-control datetime-picker', 'placeholder' => 'Fecha y Hora del Accidente', 'data-date-language' => 'es']) !!}
-                            <span class="help-block">Fecha y Hora del Accidente.</span>
-                        </div>
+                        <label class="col-sm-4 control-label">Identificador SIAT:</label>
+                        <div class="col-sm-8"><p class="form-control-static">Se asignará al guardar</p></div>
                     </div>
+                    @include('accidentes.partials.fecha-hora', ['accidenteActual' => null])
 
                     <div class="form-group">
-                        {!! Form::label('lugar', 'Dirección del siniestro:', ['class' => 'col-sm-2 control-label']) !!}
+                        {!! Form::label('lugar', 'Dirección:', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-8">
                             {!! Form::text('lugar', null, ['class' => 'form-control', 'placeholder' => 'Lugar o Dirección']) !!}
                         </div>
                     </div>
 
 
-                    @include('accidentes.partials.via-area', ['accidenteActual' => null, 'mostrarAvisoRequerido' => false])
+                    @include('accidentes.partials.via-area', ['accidenteActual' => null, 'mostrarAvisoRequerido' => false, 'columnasEtiqueta' => 4])
 
                     <div class="form-group">
-                        {!! Form::label('departamento', 'Departamento:', ['class' => 'col-sm-2 control-label']) !!}
+                        {!! Form::label('departamento', 'Departamento:', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-8">
                             <select name="departamento_id" class="form-control" v-model="departamento_id">
                                 <option value="">Seleccione Departamento...</option>
@@ -223,7 +223,7 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('distrito', 'Distrito:', ['class' => 'col-sm-2 control-label']) !!}
+                        {!! Form::label('distrito', 'Distrito:', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-8">
                             <select name="distrito_id" class="form-control" v-model="distrito_id">
                                 <option value="">Seleccione Distrito...</option>
@@ -234,7 +234,7 @@
                     </div>
 
                     <div class="form-group">
-                        {!! Form::label('localidad', 'Barrio/Localidad:', ['class' => 'col-sm-2 control-label']) !!}
+                        {!! Form::label('localidad', 'Barrio/Localidad:', ['class' => 'col-sm-4 control-label']) !!}
                         <div class="col-sm-8">
                             <select name="localidad_id" class="form-control" v-model="localidad_id">
                                 <option value="">Seleccione Localidad...</option>
@@ -246,14 +246,8 @@
 
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Coordenadas</label>
-                        <div class="col-sm-4">
-                            {!! Form::text('gps_latitud', null, ['class' => 'form-control', 'readonly' => true, 'required' => true]) !!}
-                        </div>
-                        <div class="col-sm-4">
-                            {!! Form::text('gps_longitud', null, ['class' => 'form-control', 'readonly' => true, 'required' => true]) !!}
-                        </div>
-                        <div class="col-sm-10 col-sm-offset-2">
+                        @include('accidentes.partials.coordenadas-campos', ['accidenteActual' => null])
+                        <div class="col-sm-8 col-sm-offset-4 bloque24-mapa">
                             <input type="hidden" name="ubicacion_confirmada" value="0">
                             <div id="coordenadas-accidente" data-geografia-url="{{ url('accidentes/geografia') }}" style="width: 100%; height: 400px;"></div>
                             <p id="mapa-estado" class="help-block" role="status" aria-live="polite">Seleccione un departamento para ubicar el siniestro.</p>

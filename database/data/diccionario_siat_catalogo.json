@@ -1,0 +1,433 @@
+[
+  {
+    "grupo": "A: TIPO Y FACTORES DEL SINIESTRO",
+    "pregunta": "1. Tipo de siniestro",
+    "codigo": "A_6",
+    "opciones": {
+      "Colisión con dos o más vehículos": "7",
+      "Colisión con peatón": "1",
+      "Colisión con objeto fijo (árbol, poste, barrera, valla, etc.)": "3",
+      "Colisión con un objeto no fijo o con carga caída.": "4",
+      "Colisión con animal": "5",
+      "Colisión con vehículo estacionado": "2",
+      "Accidente de un solo vehículo/sin colisión (salidas de la vía, vueltas de campana, vuelco, las caídas de ciclistas/motociclista)": "6",
+      "Otro tipo de accidente": "8",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "A: TIPO Y FACTORES DEL SINIESTRO",
+    "pregunta": "2. Condición meteorológica",
+    "codigo": "A_4",
+    "opciones": {
+      "Buen tiempo (cielo despejado o nublado)": "1",
+      "Lluvia (intensa o ligera)": "2",
+      "Niebla, bruma o humo": "4",
+      "Granizo": "5",
+      "Viento fuerte": "6",
+      "Otras condiciones meteorológicas": "7",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "A: TIPO Y FACTORES DEL SINIESTRO",
+    "pregunta": "3. Condición de iluminación",
+    "codigo": "A_5",
+    "opciones": {
+      "Luz natural durante el día": "1",
+      "Luz natural durante el amanecer o el atardecer": "2",
+      "Oscuro con el alumbrado público encendido": "3",
+      "Oscuro con el alumbrado público apagado": "4",
+      "Oscuro no hay alumbrado público": "5",
+      "Oscuro se desconoce la situación del alumbrado público": "6",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "A: TIPO Y FACTORES DEL SINIESTRO",
+    "pregunta": "4. Superficie de la vía",
+    "codigo": "A_16",
+    "opciones": {
+      "Seca": "1",
+      "Resbaladizo (barro, aceite)": "3",
+      "Mojado, húmedo": "4",
+      "Inundado": "5",
+      "Otro": "6",
+      "Bache o ahuellamiento": "7",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "A: TIPO Y FACTORES DEL SINIESTRO",
+    "pregunta": "5. Factor interviniente vehículo",
+    "codigo": "APY_07",
+    "opciones": {
+      "Desperfecto mecánico": "1",
+      "Reventón de cubierta": "2",
+      "Desprendimiento de carga": "3",
+      "Exceso de carga": "4",
+      "Falla de freno": "5",
+      "Pérdida de dirección": "6",
+      "Pérdida de rueda": "7",
+      "Rotura de parabrisas": "8",
+      "No hubo factor vehículo interviniente": "9"
+    }
+  },
+  {
+    "grupo": "A: TIPO Y FACTORES DEL SINIESTRO",
+    "pregunta": "6. Factor interviniente humano",
+    "codigo": "APY_08",
+    "opciones": {
+      "Adelantamiento indebido": "1",
+      "Exceso de velocidad": "2",
+      "Cruzar semáforo en rojo": "3",
+      "Uso del celular al volante": "4",
+      "Conducir en estado etílico": "5",
+      "Giro indebido": "6",
+      "No realizar señal de maniobra": "7",
+      "No conservar distancia": "8",
+      "No conservar su lado (derecha)": "9",
+      "Circular sin luz encendida": "10",
+      "Dormir al volante": "11",
+      "Estacionamiento inapropiado": "12",
+      "Encandilamiento": "13",
+      "Distracción al volante (tereré, mate, comer, otro)": "14",
+      "No respetar señal de tránsito": "15",
+      "No hubo factor humano interviniente": "16"
+    }
+  },
+  {
+    "grupo": "B: REGULACIÓN DEL TRÁNSITO",
+    "pregunta": "7. Regulación de la circulación",
+    "codigo": "A_14",
+    "opciones": {
+      "Agente de tránsito regula la circulación": "1",
+      "Señal de «pare»": "2",
+      "Señal vertical o marcas viales de «ceda el paso»": "3",
+      "Otras señales de tránsito": "4",
+      "Semáforo en funcionamiento": "5",
+      "Semáforo averiado": "6",
+      "Semáforo intermitente": "9",
+      "Sin regulación": "7",
+      "Otra": "8",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "C: DATOS DEL VEHÍCULO",
+    "pregunta": "8. Vehículo N°",
+    "codigo": "V_1",
+    "opciones": {}
+  },
+  {
+    "grupo": "C: DATOS DEL VEHÍCULO",
+    "pregunta": "9. Número de ocupantes",
+    "codigo": "VPY_01",
+    "opciones": {}
+  },
+  {
+    "grupo": "C: DATOS DEL VEHÍCULO",
+    "pregunta": "10. Conductor propietario",
+    "codigo": "VPY_02",
+    "opciones": {
+      "Si": "1",
+      "No": "2"
+    }
+  },
+  {
+    "grupo": "C: DATOS DEL VEHÍCULO",
+    "pregunta": "11. Tipo de vehículo",
+    "codigo": "V_2",
+    "opciones": {
+      "Bicicleta": "1",
+      "Motocicleta": "2",
+      "Motocarro": "21",
+      "Automóvil": "3",
+      "Camioneta o furgón": "31",
+      "Autobús (transporte público, viajes turísticos, etc.).": "4",
+      "Vehículo para transporte de mercancías ligero (<3,5 tn)": "5",
+      "Vehículo para transporte de mercancías pesado (>3,5 tn)": "6",
+      "Carreta/Animal": "7",
+      "Vehículo de movilidad personal (patinete eléctrico, segway.)": "8",
+      "Otro tipo de vehículo motorizado": "9",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "C: DATOS DEL VEHÍCULO",
+    "pregunta": "12. Vehículo asegurado",
+    "codigo": "VPY_03",
+    "opciones": {
+      "Si": "1",
+      "No": "2"
+    }
+  },
+  {
+    "grupo": "C: DATOS DEL VEHÍCULO",
+    "pregunta": "13. Chapa N°",
+    "codigo": "V_6",
+    "opciones": {}
+  },
+  {
+    "grupo": "C: DATOS DEL VEHÍCULO",
+    "pregunta": "14. Marca",
+    "codigo": "VPY_04",
+    "opciones": {}
+  },
+  {
+    "grupo": "C: DATOS DEL VEHÍCULO",
+    "pregunta": "15. Modelo",
+    "codigo": "VPY_05",
+    "opciones": {}
+  },
+  {
+    "grupo": "C: DATOS DEL VEHÍCULO",
+    "pregunta": "16. Año",
+    "codigo": "VPY_06",
+    "opciones": {}
+  },
+  {
+    "grupo": "C: DATOS DEL VEHÍCULO",
+    "pregunta": "17. Fugado",
+    "codigo": "V_10",
+    "opciones": {
+      "Si": "1",
+      "No": "2"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "18. Transportado en vehículo N°",
+    "codigo": "P_1",
+    "opciones": {}
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "19. Tipo de documento",
+    "codigo": "PPY_01",
+    "opciones": {
+      "ID": "1",
+      "CI": "2",
+      "PAS": "3",
+      "DOC. EXT.": "4"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "20. Número de documento",
+    "codigo": "PPY_02",
+    "opciones": {}
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "21. Apellidos",
+    "codigo": "PPY_031",
+    "opciones": {}
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "22. Nombres",
+    "codigo": "PPY_032",
+    "opciones": {}
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "23. Fecha de nacimiento",
+    "codigo": "P_2",
+    "opciones": {}
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "23.1. Edad estimada (Solo en caso de no contar con la fecha de nacimiento completar)",
+    "codigo": "P_3",
+    "opciones": {}
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "24. Sexo",
+    "codigo": "P_4",
+    "opciones": {
+      "Masculino": "1",
+      "Femenino": "2"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "25. Nacionalidad",
+    "codigo": "P_5",
+    "opciones": {
+      "Paraguayo": "1",
+      "Extranjero": "2"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "26. Gravedad de las lesiones",
+    "codigo": "P_6",
+    "opciones": {
+      "Fallecido (murió de inmediato o en las 24 horas siguientes)": "1",
+      "Lesionado hospitalizado (al menos 24 horas)": "2",
+      "Lesionado no hospitalizado (menos de 24 horas)": "3",
+      "Ileso (no sufrió ningún traumatismo)": "4",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "27. Tipo de usuario de la vía",
+    "codigo": "P_7",
+    "opciones": {
+      "Conductor": "1",
+      "Pasajero": "2",
+      "Peatón": "3",
+      "Ciclista": "4",
+      "Otro": "8",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "27.1. Solo en caso de ser pasajero especifique posición en el vehículo",
+    "codigo": "P_8",
+    "opciones": {
+      "Pasajero delantero": "2",
+      "Pasajero trasero sentado": "3",
+      "Pasajero trasero de pie": "4",
+      "En otra posición": "5",
+      "Pasajero trasero sin especificar": "51",
+      "Pasajero de motocicleta": "52",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "28. Uso chaleco reflectivo (Motociclista y acompañante/Ciclista)",
+    "codigo": "PPY_04",
+    "opciones": {
+      "Llevaba chaleco": "1",
+      "No llevaba chaleco": "2",
+      "Se desconoce": "3"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "29. Uso de casco de protección (Motociclista y acompañante)",
+    "codigo": "P_17",
+    "opciones": {
+      "Llevaba casco": "1",
+      "No llevaba casco": "2",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "30. Cinturón de seguridad o silla de retención (Sólo para vehículos de 4 o más ruedas)",
+    "codigo": "P_16",
+    "opciones": {
+      "Cinturón de seguridad utilizado": "90",
+      "Cinturón de seguridad no utilizado": "91",
+      "Sistema de retención infantil utilizado": "92",
+      "Sistema de retención infantil no utilizado": "93",
+      "Se desconoce": "99",
+      "No aplica (ómnibus, etc.)": "7"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "31. Prueba de alcotest",
+    "codigo": "P_9",
+    "opciones": {
+      "Positivo": "1",
+      "Negativo": "2",
+      "No testado": "3",
+      "La persona rehusó someterse a la prueba": "4",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "31.1 Nivel alcohol (Solo en caso que el test haya sido realizado)",
+    "codigo": "P_12",
+    "opciones": {}
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "32. Narcotest",
+    "codigo": "P_14",
+    "opciones": {
+      "Positivo": "1",
+      "Negativo": "2",
+      "No testado": "3",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "33. Cuenta con habilitación",
+    "codigo": "PPY_05",
+    "opciones": {
+      "Sí": "1",
+      "No": "2",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "34. Cuenta con licencia de conducir",
+    "codigo": "PPY_06",
+    "opciones": {
+      "Si": "1",
+      "No": "2",
+      "Menor": "3",
+      "Se desconoce": "99"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "34.1 Número de licencia (Solo en caso que cuente con licencia de conducir)",
+    "codigo": "PPY_07",
+    "opciones": {}
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "34.2 Tipo de licencia de conducir(Solo en caso que cuente con licencia de conducir)",
+    "codigo": "PPY_08",
+    "opciones": {
+      "Motociclista": "1",
+      "Particular": "2",
+      "Profesional Clase \"B\"": "3",
+      "Profesional Clase \"B\" Superior": "4",
+      "Profesional Clase \"A\" Superior": "5",
+      "Profesional Clase \"A\"": "6",
+      "Profesional Clase \"C\"": "7",
+      "Profesional Clase \"D\"": "8",
+      "Extranjero": "9"
+    }
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "34.3 Fecha de expedición",
+    "codigo": "P_19",
+    "opciones": {}
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "34.4 Fecha de vencimiento",
+    "codigo": "PPY_09",
+    "opciones": {}
+  },
+  {
+    "grupo": "D: DATOS DE LAS PERSONAS INVOLUCRADAS",
+    "pregunta": "35. Acción del peatón",
+    "codigo": "P_21",
+    "opciones": {
+      "Cruzando por paso de peatones": "1",
+      "Cruzando fuera de paso de peatones": "2",
+      "Andando por la calzada": "3",
+      "Parado en la calzada": "4",
+      "Fuera de la calzada": "5",
+      "Otro": "8",
+      "Se desconoce": "99"
+    }
+  }
+]

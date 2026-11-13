@@ -257,7 +257,7 @@ function form70MarkInvalid(element, invalid) {
     element.find('input, select').attr('aria-invalid', invalid ? 'true' : 'false');
 }
 window.form70Refresh = function() {
-    var headerFields = ['caratula', 'fecha_accidente', 'lugar', 'tipo_camino', 'area', 'departamento_id', 'distrito_id', 'localidad_id', 'gps_latitud', 'gps_longitud'];
+    var headerFields = ['caratula', 'fecha_siniestro', 'hora_siniestro', 'lugar', 'tipo_camino', 'area', 'departamento_id', 'distrito_id', 'localidad_id', 'gps_latitud', 'gps_longitud'];
     headerFields.forEach(function(name) {
         var field = $('#cargar-accidente [name="' + name + '"]');
         field.attr('aria-required', 'true');
@@ -292,7 +292,7 @@ window.form70Validate = function(section) {
     window.form70Refresh();
     if (section === undefined || section === 0) {
         var locationInvalid = $('[name=ubicacion_confirmada]').val() !== '1';
-        var fields = {caratula:'Carátula',fecha_accidente:'Fecha y hora',lugar:'Ubicación del siniestro',tipo_camino:'Tipo de vía',area:'Área',departamento_id:'Departamento',distrito_id:'Distrito',localidad_id:'Localidad',gps_latitud:'Latitud',gps_longitud:'Longitud'};
+        var fields = {caratula:'Carátula',fecha_siniestro:'Fecha del siniestro',hora_siniestro:'Hora del siniestro',lugar:'Ubicación del siniestro',tipo_camino:'Tipo de vía',area:'Área',departamento_id:'Departamento',distrito_id:'Distrito',localidad_id:'Localidad',gps_latitud:'Latitud',gps_longitud:'Longitud'};
         var headerError = locationInvalid ? 'Confirme la ubicación del siniestro en el mapa.' : null;
         for (var name in fields) {
             var field = $('[name="'+name+'"]');

@@ -1,0 +1,77 @@
+.bloque24-form .bloque24-separador {
+    margin: 6px 0 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e5e5;
+    color: #666;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.bloque24-form .bloque24-separador:not(:first-child) {
+    margin-top: 24px;
+}
+
+.bloque24-form.row-border .form-group {
+    border-top: none;
+    padding: 12px 0;
+}
+
+.bloque24-form .control-label {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.bloque24-form .bloque24-campos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+}
+
+.bloque24-form .bloque24-campo {
+    max-width: 100%;
+}
+
+.bloque24-form .bloque24-campo > label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #666;
+}
+
+.bloque24-form .bloque24-campo small {
+    margin-left: 5px;
+    color: #888;
+    font-size: 11px;
+}
+
+.bloque24-form .bloque24-fecha { width: 170px; }
+.bloque24-form .bloque24-hora { width: 120px; }
+.bloque24-form .bloque24-coordenada { width: 190px; }
+
+.bloque24-form .bloque24-campo .form-control {
+    max-width: 100%;
+    height: 34px;
+    font-size: 13px;
+}
+
+.bloque24-form .bloque24-mapa {
+    margin-top: 16px;
+}
+
+.bloque24-form .bloque24-mapa .help-block {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.bloque24-form .bloque24-mapa .btn {
+    margin-bottom: 6px;
+}
+
+@media (max-width: 767px) {
+    .bloque24-form .control-label {
+        display: block;
+        margin-bottom: 8px;
+    }
+}

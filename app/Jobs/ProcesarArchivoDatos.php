@@ -92,7 +92,7 @@ class ProcesarArchivoDatos extends Job implements ShouldQueue
                 $opciones = [];
 
                 $modelo = $preguntasCollection->firstWhere('id', $respuesta['pregunta_id']);
-                if (!$modelo || !is_scalar($respuesta['valor']) || !$modelo->permiteRespuesta($respuesta['valor'])) {
+                if (!$modelo || \App\Services\Bloque24Horas::esPregunta($modelo) || !is_scalar($respuesta['valor']) || !$modelo->permiteRespuesta($respuesta['valor'])) {
                     $errores[] = 'Pregunta u opción inactiva o no permitida: '.$respuesta['pregunta_id'];
                     continue;
                 }

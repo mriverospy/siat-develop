@@ -97,13 +97,15 @@ class AccidenteService
         // si salta un error todo se cancela
         DB::transaction(function () use ($accidenteId, $accidente, $ediciones) {
             // Actualizar campos del accidente
-            Accidente::where('id', $accidenteId)
-                ->update($accidente);
+            Accidente::findOrFail($accidenteId)->fill($accidente)->save();
 
             // iterar sobre todas las ediciones
             if($ediciones != null){
                 foreach ($ediciones as $edicion) {
                     $pregunta = Pregunta::with('detalles')->find($edicion['preguntaId']);
+                    if (Bloque24Horas::esPregunta($pregunta)) {
+                        throw ValidationException::withMessages(['respuestas' => 'Modifique estos datos desde el Bloque 24 horas.']);
+                    }
                     if (!$pregunta || !$pregunta->activo) {
                         throw ValidationException::withMessages(['respuestas' => 'Pregunta inactiva o no permitida.']);
                     }
@@ -221,6 +223,8 @@ class AccidenteService
     {
         // Obtener grupos y preguntas masters
         $masters = GrupoDePreguntas::where('master', '=', 1)
+                    ->where('nombre', '<>', Bloque24Horas::NOMBRE)
+                    ->orderBy('orden')->orderBy('id')
                     ->with([
                         'preguntas' => function ($query) {
                             $query->activas()->orderBy('orden', 'asc');
@@ -241,7 +245,8 @@ class AccidenteService
                             ->get();
 
         // Fusionar grupos master con grupos de la institución
-        $grupoPreguntas = $masters->merge($institucionales)->where('visible', true);
+        $grupoPreguntas = $masters->merge($institucionales)->where('visible', true)
+            ->reject(fn ($grupo) => $grupo->nombre === Bloque24Horas::NOMBRE);
 
         // Preparar los grupos de preguntas con sus preguntas
         $grupos = [];

@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="{{ asset('css/carga_evento.css') }}" rel="stylesheet">
     <link href="{{ asset('css/accidentes-cargar.css') }}?v={{ filemtime(public_path('css/accidentes-cargar.css')) }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/bloque-24-horas.css') }}?v={{ filemtime(public_path('css/bloque-24-horas.css')) }}">
     <!-- <link href="{{ asset('css/offline-theme-default.css') }}" rel="stylesheet"> -->
     <link href="{{ asset('css/offline-theme-default-indicator.css') }}" rel="stylesheet">
     <!-- <link href="{{ asset('css/offline-language-spanish.css') }}" rel="stylesheet"> -->

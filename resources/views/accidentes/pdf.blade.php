@@ -86,7 +86,7 @@
             <th>Carátula</th>
         </tr>
         <tr>
-            <td class="text-center">{{ $accidente->caratula }}</td>
+            <td class="text-center">{{ $accidente->caratula }}<br><small>Identificador SIAT: {{ $accidente->codigo_siat ?? 'Pendiente de asignación' }}</small></td>
         </tr>
     </table>
     <table>
