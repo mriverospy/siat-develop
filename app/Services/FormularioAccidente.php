@@ -25,7 +25,7 @@ class FormularioAccidente
         return !isset($rule['vehiculos']) || in_array($vehicle, $rule['vehiculos'], true);
     }
 
-    public function cabecera(array $data, bool $editing = false)
+    public function cabecera(array $data, bool $editing = false, array $original = [])
     {
         $vias = array_keys(config('formulario_accidente.vias'));
         if ($editing) $vias = array_merge($vias, ['calle', 'ruta', 'avenida', 'ramal', 'camino_vecinal', 'interseccion']);
@@ -43,6 +43,16 @@ class FormularioAccidente
             $rules['departamento_id'] = 'required|exists:departamentos,id';
             $rules['distrito_id'] = ['required', Rule::exists('distritos', 'id')->where('departamento_id', $data['departamento_id'] ?? null)];
             $rules['localidad_id'] = ['required', Rule::exists('localidades', 'id')->where('distrito_id', $data['distrito_id'] ?? null)];
+        } else {
+            // Los registros anteriores pueden carecer de estos datos. Exigirlos al
+            // modificarlos, sin impedir editar otra respuesta si siguen intactos.
+            foreach (['lugar', 'tipo_camino', 'area'] as $campo) {
+                if (array_key_exists($campo, $data) && array_key_exists($campo, $original)
+                    && (string) ($data[$campo] ?? '') === (string) ($original[$campo] ?? '')
+                    && Validator::make([$campo => $data[$campo]], [$campo => $rules[$campo]])->fails()) {
+                    unset($rules[$campo]);
+                }
+            }
         }
         return Validator::make($data, $rules);
     }

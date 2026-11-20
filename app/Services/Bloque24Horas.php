@@ -96,7 +96,7 @@ class Bloque24Horas
             $respuesta = $respuestas->first() ?? new Respuesta;
             $datos = [
                 'pregunta_id' => $pregunta->id, 'accidente_id' => $accidente->id,
-                'usuario_id' => auth()->id() ?? $accidente->usuario_id, 'agrupador' => 0,
+                'usuario_id' => $respuesta->exists ? $respuesta->usuario_id : (auth()->id() ?? $accidente->usuario_id), 'agrupador' => 0,
                 'pregunta_texto' => $pregunta->pregunta, 'pregunta_tipo' => $pregunta->tipo,
                 'respuesta_texto' => $codigo === 'A_2' ? null : $valor,
                 'respuesta_fecha' => $codigo === 'A_2' ? $valor : null,
@@ -108,7 +108,10 @@ class Bloque24Horas
             if ($codigo === 'APY_02') $datos['respuesta_numero'] = $distrito->id ?? null;
             if ($codigo === 'APY_03') $datos['respuesta_numero'] = $localidad->id ?? null;
             $respuesta->fill($datos);
-            if ($respuesta->isDirty()) $respuesta->save();
+            if ($respuesta->isDirty()) {
+                if ($respuesta->exists) $respuesta->usuario_id = auth()->id() ?? $accidente->usuario_id;
+                $respuesta->save();
+            }
         }
     }
 }

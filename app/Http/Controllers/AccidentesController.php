@@ -1437,10 +1437,10 @@ class AccidentesController extends Controller
             return response()->json(['status' => 'error', 'message' => implode("\n", $e->validator->errors()->all())]);
         }
         $request->merge(['accidente' => $datos]);
-        $validator = (new FormularioAccidente)->cabecera($request->input('accidente', []), true);
-        $validator->after(function ($validator) use ($datos, $accidenteId) {
+        $anterior = Accidente::findOrFail($accidenteId);
+        $validator = (new FormularioAccidente)->cabecera($request->input('accidente', []), true, $anterior->getAttributes());
+        $validator->after(function ($validator) use ($datos, $anterior) {
             if ($validator->errors()->isNotEmpty()) return;
-            $anterior = Accidente::findOrFail($accidenteId);
             $cambio = (int) $datos['localidad_id'] !== (int) $anterior->localidad_id
                 || (float) $datos['gps_latitud'] !== (float) $anterior->gps_latitud
                 || (float) $datos['gps_longitud'] !== (float) $anterior->gps_longitud;
@@ -1481,8 +1481,30 @@ class AccidentesController extends Controller
             foreach ($answers as $group) $ids = array_merge($ids, array_keys($group));
             $groupIds = Pregunta::whereIn('id', $ids)->pluck('grupo_de_preguntas_id');
             $questions = Pregunta::with('detalles')->whereIn('grupo_de_preguntas_id', $groupIds)->get();
-            $errors = (new FormularioAccidente)->respuestas($answers, $questions, $original);
+            $formulario = new FormularioAccidente;
+            $antesValidado = $original;
+            $erroresAnteriores = $formulario->respuestas($antesValidado, $questions, $original);
+            $errors = $formulario->respuestas($answers, $questions, $original);
+            $idsEditados = array_column($ediciones, 'preguntaId');
+            $errors = array_values(array_filter($errors, fn ($error) =>
+                in_array($error['pregunta_id'], $idsEditados) || !in_array($error, $erroresAnteriores, true)
+            ));
             if ($errors) return response()->json(['status' => 'error', 'message' => implode("\n", array_column($errors, 'mensaje'))]);
+            foreach ($ediciones as $edit) {
+                if ($edit['modoEdicion'] !== 'borrar' && !array_key_exists($edit['preguntaId'], $answers[$edit['agrupador']] ?? [])) {
+                    return response()->json(['status' => 'error', 'message' => 'No se puede guardar la respuesta porque no corresponde a los datos actuales de la persona o vehículo.']);
+                }
+            }
+            // Conservar respuestas históricas que ya eran inaplicables antes de editar.
+            // Solo se eliminan automáticamente si pasan a ser inaplicables con el cambio.
+            foreach ($original as $key => $group) {
+                foreach ($group as $id => $value) {
+                    $editada = collect($ediciones)->contains(fn ($e) => (string) $e['agrupador'] === (string) $key && (string) $e['preguntaId'] === (string) $id);
+                    if (!$editada && !array_key_exists($id, $antesValidado[$key] ?? []) && !array_key_exists($id, $answers[$key] ?? [])) {
+                        $answers[$key][$id] = $value;
+                    }
+                }
+            }
             // Descarta cambios y respuestas anteriores que ya no aplican al nuevo contexto.
             $ediciones = array_values(array_filter($ediciones, fn ($e) => array_key_exists($e['preguntaId'], $answers[$e['agrupador']] ?? [])));
             foreach ($original as $key => $group) {
@@ -1494,6 +1516,9 @@ class AccidentesController extends Controller
             }
         }
         $cabecera = array_intersect_key($request->get('accidente'), array_flip(['caratula', 'expediente_judicial', 'sumario_policial', 'otro', 'dependencia', 'fecha_accidente', 'lugar', 'altura', 'tipo_camino', 'area', 'localidad_id', 'codigo_postal', 'gps_latitud', 'gps_longitud', 'heridos', 'fallecidos', 'ilesos', 'participantes_siniestro']));
+        foreach (['lugar', 'tipo_camino', 'area'] as $campo) {
+            if (array_key_exists($campo, $cabecera) && $anterior->getRawOriginal($campo) === null && $cabecera[$campo] === '') unset($cabecera[$campo]);
+        }
         $gravedades = [];
         foreach ($answers as $group) {
             if (isset($group[134])) $gravedades[] = FormularioAccidente::valor($group[134]);
