@@ -78,12 +78,20 @@ class FormularioAccidente
                     if (array_key_exists($id, $group) && ($group[$id] !== ($originales[$key][$id] ?? null))) $error($id, 'Pregunta inactiva.');
                     continue;
                 }
-                if (!self::aplica($id, $group, $vehicles)) { unset($group[$id]); continue; }
+                if (!self::aplica($id, $group, $vehicles)) {
+                    // Conservar respuestas históricas sin cambios aunque la regla haya cambiado.
+                    if ($id === 141 && array_key_exists($id, $originales[$key] ?? []) && ($group[$id] ?? null) === $originales[$key][$id]) continue;
+                    unset($group[$id]);
+                    continue;
+                }
                 $value = self::valor($group[$id] ?? '');
                 $required = $q->obligatorio || in_array($id, config('formulario_accidente.obligatorias'));
                 if ($id === 131 && self::valor($group[130] ?? '') === '') $required = true;
                 if ($required && $value === '') $error($id, "Grupo $key: {$q->pregunta} es obligatorio.");
                 if ($value === '') continue;
+                if ($id === 141 && !preg_match('/^\d+(?:\.\d{1,2})?$/D', $value)) {
+                    $error($id, "{$q->pregunta}: ingrese un número no negativo con hasta dos decimales.");
+                }
                 $values = is_array($group[$id]) ? $group[$id] : [$group[$id]];
                 if (count(array_filter($values, fn ($v) => !is_scalar($v))) || ($q->tipo !== 'check' && count($values) > 1)) {
                     $error($id, "{$q->pregunta}: formato de respuesta inválido.");
