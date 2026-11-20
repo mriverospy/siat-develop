@@ -256,6 +256,30 @@ function form70MarkInvalid(element, invalid) {
     element.toggleClass('has-error', invalid);
     element.find('input, select').attr('aria-invalid', invalid ? 'true' : 'false');
 }
+function form70MostrarOcupantes(groups) {
+    var ids = {}, vehiculos = {}, personas = {}, mensajes = [];
+    siat.secciones.forEach(function(seccion) {
+        seccion.grupos.forEach(function(grupo) {
+            grupo.preguntas.forEach(function(pregunta) {
+                if (['V_1', 'VPY_01', 'P_1'].indexOf(pregunta.codigo) >= 0) ids[pregunta.codigo] = pregunta.pregunta_id;
+            });
+        });
+    });
+    if (!ids.V_1 || !ids.VPY_01 || !ids.P_1) return;
+    Object.keys(groups).forEach(function(key) {
+        var valores = groups[key], vehiculo = valores[ids.V_1], cantidad = valores[ids.VPY_01], persona = valores[ids.P_1];
+        if (/^\d+$/.test(vehiculo || '') && /^\d+$/.test(cantidad || '')) vehiculos[String(Number(vehiculo))] = Number(cantidad);
+        if (/^\d+$/.test(persona || '') && Number(persona) > 0) {
+            persona = String(Number(persona));
+            personas[persona] = (personas[persona] || 0) + 1;
+        }
+    });
+    Object.keys(vehiculos).forEach(function(n) {
+        var registradas = personas[n] || 0;
+        if (vehiculos[n] !== registradas) mensajes.push('Vehículo ' + n + ': ' + vehiculos[n] + ' ocupantes declarados y ' + registradas + ' personas registradas.');
+    });
+    $('#alerta-ocupantes').text(mensajes.join(' ')).toggle(mensajes.length > 0);
+}
 window.form70Refresh = function() {
     var headerFields = ['caratula', 'fecha_siniestro', 'hora_siniestro', 'lugar', 'tipo_camino', 'area', 'departamento_id', 'distrito_id', 'localidad_id', 'gps_latitud', 'gps_longitud'];
     headerFields.forEach(function(name) {
@@ -264,6 +288,7 @@ window.form70Refresh = function() {
         field.closest('.form-group').find('.control-label').addClass('required-label');
     });
     var groups = form70Values(), vehicles = {};
+    form70MostrarOcupantes(groups);
     Object.keys(groups).forEach(function(key) { if (groups[key][115]) vehicles[groups[key][115]] = groups[key][118]; });
     $('.form70-question').each(function() {
         var el = $(this), id = Number(el.attr('data-question')), values = groups[el.attr('data-group')] || {};

@@ -97,7 +97,7 @@ class AccidenteService
         // si salta un error todo se cancela
         DB::transaction(function () use ($accidenteId, $accidente, $ediciones) {
             // Actualizar campos del accidente
-            Accidente::findOrFail($accidenteId)->fill($accidente)->save();
+            Accidente::whereKey($accidenteId)->lockForUpdate()->firstOrFail()->fill($accidente)->save();
 
             // iterar sobre todas las ediciones
             if($ediciones != null){
@@ -211,7 +211,8 @@ class AccidenteService
                     }
                 }
             }
-
+            $errores = app(ConsistenciaOcupantes::class)->validarAccidente($accidenteId);
+            if ($errores) throw ValidationException::withMessages(['ocupantes' => array_column($errores, 'mensaje')]);
         });
 
         return [
@@ -264,6 +265,7 @@ class AccidenteService
                     'grupo_duplicable' => ((int) $grupo->puede_duplicar == 1),
                     'grupo_orden' => $grupo->orden,
                     'pregunta_id' => $pregunta->id,
+                    'codigo' => $pregunta->codigo,
                     'pregunta' => $pregunta->pregunta,
                     'pregunta_orden' => (int) $pregunta->orden,
                     'tipo' => $pregunta->tipo,

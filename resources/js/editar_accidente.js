@@ -233,6 +233,10 @@ var app = new Vue({
             // define respuesta nueva
             var respuestaNueva = msg.valorRespuesta;
 
+            // Conservar un único cambio pendiente por pregunta y persona/vehículo.
+            this.setEdiciones = this.setEdiciones.filter(function(edicion) {
+                return String(edicion.preguntaId) !== String(msg.pregunta.pregunta_id) || String(edicion.agrupador) !== String(agrupador);
+            });
             this.setEdiciones.push({
                 modoEdicion: modoEdicion,
                 preguntaId: msg.pregunta.pregunta_id,
@@ -248,6 +252,9 @@ var app = new Vue({
             this.respuestaSeleccionada = null;
         },
         'borrar-respuesta': function(msg) {
+            this.setEdiciones = this.setEdiciones.filter(function(edicion) {
+                return String(edicion.preguntaId) !== String(msg.pregunta.pregunta_id) || String(edicion.agrupador) !== String(msg.respuesta.agrupador);
+            });
             this.setEdiciones.push({
                 modoEdicion: 'borrar',
                 preguntaId: msg.pregunta.pregunta_id,
@@ -312,6 +319,11 @@ var app = new Vue({
             this.modoEdicion = 'respuestas';
         },
         nuevoAgrupador: function() {
+            if (!this.grupoPreguntaSeleccionado.duplicable) return;
+            var grupoId = this.grupoPreguntaSeleccionado.id;
+            if (!this.agrupadoresAccidente[grupoId]) {
+                this.$set('agrupadoresAccidente.' + grupoId, []);
+            }
             var agrupadorNuevo = 0;
 
             var indice = 0;
@@ -328,10 +340,12 @@ var app = new Vue({
             indice = indice + 1;
             agrupadorNuevo = agrupadorNuevo + 1;
 
-            this.agrupadoresAccidente[this.grupoPreguntaSeleccionado.id].push({
+            var nuevo = {
                 agrupador: agrupadorNuevo,
                 titulo: this.grupoPreguntaSeleccionado.grupo_nombre + ' - ' + indice
-            });
+            };
+            this.agrupadoresAccidente[grupoId].push(nuevo);
+            this.seleccionarAgrupador(nuevo);
         },
         seleccionarGrupoPreguntas: function(grupoPregunta) {
             this.grupoPreguntaSeleccionado = grupoPregunta;

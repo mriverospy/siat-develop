@@ -91,6 +91,7 @@
                     <li class="list-group-item text-danger" v-for="error in errors"><i class="fa fa-exclamation-triangle fa-fw"></i>@{{ error.mensaje }}</li>
                 </ul>
             </div>
+            <div id="alerta-ocupantes" class="alert alert-warning" role="status" aria-live="polite" style="display:none"></div>
 
             <component
                 v-for="seccion in secciones"

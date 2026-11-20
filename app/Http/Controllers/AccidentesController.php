@@ -210,6 +210,7 @@ class AccidentesController extends Controller
 
         $respuestas = collect($respuestas);
 
+        $this->params['alertas_ocupantes'] = app(\App\Services\ConsistenciaOcupantes::class)->validarAccidente($accidente->id);
         return view($this->route_name . '.show', compact('accidente', 'respuestas'))->with('params', $this->params);
     }
 
@@ -757,6 +758,7 @@ class AccidentesController extends Controller
                     'grupo_duplicable' => ((int)$grupo->puede_duplicar == 1),
                     'grupo_orden' => $grupo->orden,
                     'pregunta_id' => $pregunta->id,
+                    'codigo' => $pregunta->codigo,
                     'pregunta' => $pregunta->pregunta,
                     'pregunta_orden' => (int)$pregunta->orden,
                     'tipo' => $pregunta->tipo,
@@ -910,6 +912,7 @@ class AccidentesController extends Controller
             ->whereHas('grupoDePreguntas', fn ($query) => $query->where('visible', true)->where('nombre', '<>', Bloque24Horas::NOMBRE))
             ->get();
         $errores = $formulario->respuestas($respuestas, $preguntasCollection);
+        $errores = array_merge($errores, app(\App\Services\ConsistenciaOcupantes::class)->validar($respuestas));
         if ($errores) {
             return response()->json(['status' => 'error', 'message' => 'Se encontraron errores.', 'payload' => $errores]);
         }
@@ -1275,94 +1278,107 @@ class AccidentesController extends Controller
             }
         }
 
-        $respuestasModel = Respuesta::where('accidente_id', $accidenteId)->where('pregunta_id', $preguntaId)->get();
-        $agrupador = '';
-        foreach ($respuestasModel as $_respuesta) {
-            $agrupador = $_respuesta->agrupador;
-            $_respuesta->delete();
-        }
+        try {
+            DB::transaction(function () use ($accidenteId, $preguntaId, $pregunta, $usuarioId, $respuestas, $accidente) {
+                Accidente::whereKey($accidenteId)->lockForUpdate()->firstOrFail();
+                $respuestasModel = Respuesta::where('accidente_id', $accidenteId)->where('pregunta_id', $preguntaId)->get();
+                if (in_array($pregunta->codigo, ['V_1', 'VPY_01', 'P_1'], true) && $respuestasModel->pluck('agrupador')->unique()->count() > 1) {
+                    throw \Illuminate\Validation\ValidationException::withMessages(['ocupantes' => 'Esta pregunta tiene varios grupos. Utilice la edición del accidente para modificar cada vehículo o persona.']);
+                }
+                $agrupador = '';
+                foreach ($respuestasModel as $_respuesta) {
+                    $agrupador = $_respuesta->agrupador;
+                    $_respuesta->delete();
+                }
 
-        // Procesar respuestas
-        if (is_array($respuestas) and count($respuestas) > 0) {
-            // Guardar respuestas
-            foreach ($respuestas as $respuesta) {
-                $res = [
-                    'pregunta_id' => $pregunta->id,
-                    'usuario_id' => $usuarioId,
-                    'agrupador' => $agrupador,
-                    'pregunta_texto' => $pregunta->pregunta,
-                    'pregunta_tipo' => $pregunta->tipo,
-                ];
-                switch ($pregunta->tipo) {
-                    case 'text':
-                    case 'radio':
-                        if (is_array($respuesta)) {
-                            $respuestaValor = trim(current($respuesta));
-                            $accidente->respuestas()->create($res);
-                        } else {
-                            $respuestaValor = trim($respuesta);
-                        }
+                // Procesar respuestas
+                if (is_array($respuestas) and count($respuestas) > 0) {
+                    // Guardar respuestas
+                    foreach ($respuestas as $respuesta) {
+                        $res = [
+                            'pregunta_id' => $pregunta->id,
+                            'usuario_id' => $usuarioId,
+                            'agrupador' => $agrupador,
+                            'pregunta_texto' => $pregunta->pregunta,
+                            'pregunta_tipo' => $pregunta->tipo,
+                        ];
+                        switch ($pregunta->tipo) {
+                            case 'text':
+                            case 'radio':
+                                if (is_array($respuesta)) {
+                                    $respuestaValor = trim(current($respuesta));
+                                } else {
+                                    $respuestaValor = trim($respuesta);
+                                }
 
-                        if ($respuestaValor != '') {
-                            $res['respuesta_texto'] = $respuestaValor;
-                            $res['codigo'] = Respuesta::codigoConservado($respuestasModel, $pregunta->id, $respuestaValor);
-                            $accidente->respuestas()->create($res);
-                        }
-                        break;
-
-                    case 'number':
-                        if (is_array($respuesta)) {
-                            $respuestaValor = trim(current($respuesta));
-                            $accidente->respuestas()->create($res);
-                        } else {
-                            $respuestaValor = trim($respuesta);
-                            $accidente->respuestas()->create($res);
-                        }
-
-                        if ($respuestaValor != '') {
-                            $res['respuesta_numero'] = $respuestaValor;
-                            $accidente->respuestas()->create($res);
-                        }
-                        break;
-
-                    case 'check':
-                        if (is_array($respuesta)) {
-                            foreach ($respuesta as $r) {
-                                $res['respuesta_texto'] = trim($r);
-                                $res['codigo'] = Respuesta::codigoConservado($respuestasModel, $pregunta->id, $res['respuesta_texto']);
-                                if ($res['respuesta_texto'] != '') {
+                                if ($respuestaValor != '') {
+                                    $res['respuesta_texto'] = $respuestaValor;
+                                    $res['codigo'] = Respuesta::codigoConservado($respuestasModel, $pregunta->id, $respuestaValor);
                                     $accidente->respuestas()->create($res);
                                 }
-                            }
-                        } else {
-                            $res['respuesta_texto'] = trim($respuesta);
-                            $res['codigo'] = Respuesta::codigoConservado($respuestasModel, $pregunta->id, $res['respuesta_texto']);
-                            if ($res['respuesta_texto'] != '') {
-                                $accidente->respuestas()->create($res);
-                            }
-                        }
-                        break;
+                                break;
 
-                    case 'date':
-                        if (is_array($respuesta)) {
-                            $respuestaValor = current($respuesta);
-                            $accidente->respuestas()->create($res);
-                        } else {
-                            $respuestaValor = trim($respuesta);
-                            $accidente->respuestas()->create($res);
-                        }
+                            case 'number':
+                                if (is_array($respuesta)) {
+                                    $respuestaValor = trim(current($respuesta));
+                                } else {
+                                    $respuestaValor = trim($respuesta);
+                                }
 
-                        if ($respuestaValor != '') {
-                            $res['respuesta_fecha'] = $respuestaValor;
-                            $accidente->respuestas()->create($res);
-                        }
-                        break;
+                                if ($respuestaValor != '') {
+                                    $res['respuesta_numero'] = $respuestaValor;
+                                    $accidente->respuestas()->create($res);
+                                }
+                                break;
 
-                    default:
-                        // no hacer nada, ignorar dato
-                        break;
+                            case 'check':
+                                if (is_array($respuesta)) {
+                                    foreach ($respuesta as $r) {
+                                        $res['respuesta_texto'] = trim($r);
+                                        $res['codigo'] = Respuesta::codigoConservado($respuestasModel, $pregunta->id, $res['respuesta_texto']);
+                                        if ($res['respuesta_texto'] != '') {
+                                            $accidente->respuestas()->create($res);
+                                        }
+                                    }
+                                } else {
+                                    $res['respuesta_texto'] = trim($respuesta);
+                                    $res['codigo'] = Respuesta::codigoConservado($respuestasModel, $pregunta->id, $res['respuesta_texto']);
+                                    if ($res['respuesta_texto'] != '') {
+                                        $accidente->respuestas()->create($res);
+                                    }
+                                }
+                                break;
+
+                            case 'date':
+                                if (is_array($respuesta)) {
+                                    $respuestaValor = current($respuesta);
+                                } else {
+                                    $respuestaValor = trim($respuesta);
+                                }
+
+                                if ($respuestaValor != '') {
+                                    $res['respuesta_fecha'] = $respuestaValor;
+                                    $accidente->respuestas()->create($res);
+                                }
+                                break;
+
+                            default:
+                                // no hacer nada, ignorar dato
+                                break;
+                        }
+                    }
                 }
+
+                $errores = app(\App\Services\ConsistenciaOcupantes::class)->validarAccidente($accidenteId);
+                if ($errores) throw \Illuminate\Validation\ValidationException::withMessages(['ocupantes' => array_column($errores, 'mensaje')]);
+            });
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $mensajes = $e->validator->errors()->all();
+            if ($request->ajax()) {
+                return response()->json(['status' => 'error', 'message' => 'Se encontraron errores.', 'payload' => array_map(fn ($mensaje) => ['pregunta_id' => $preguntaId, 'mensaje' => $mensaje], $mensajes)]);
             }
+            return redirect('accidentes/'.$accidenteId.'/pregunta/'.$preguntaId.'/edit')
+                ->withMessages(['type' => 'error', 'text' => implode('<br>', $mensajes)]);
         }
 
         if ($request->ajax()) {
@@ -1414,6 +1430,7 @@ class AccidentesController extends Controller
         $this->params['agrupadores_accidente'] = $accidenteService->obtenerAgrupadores($accidenteId);
         $this->params['grupo_preguntas'] = $accidenteService->obtenerGruposPreguntas();
         $this->params['respuestas_accidente'] = $accidenteService->obtenerRespuestas($accidenteId);
+        $this->params['alertas_ocupantes'] = app(\App\Services\ConsistenciaOcupantes::class)->validarAccidente($accidenteId);
 
         return view($this->route_name . '.editar')->with('params', $this->params);
     }
@@ -1529,7 +1546,11 @@ class AccidentesController extends Controller
             $cabecera['heridos'] = count(array_filter($gravedades, fn ($v) => in_array($v, ['Lesionado hospitalizado (al menos 24 horas)', 'Lesionado no hospitalizado (menos de 24 horas)'])));
             $cabecera['ilesos'] = count(array_filter($gravedades, fn ($v) => $v === 'Ileso (no sufrió ningún traumatismo)'));
         }
-        $resultado = $accidenteService->actualizarAccidente($accidenteId, $cabecera, $ediciones);
+        try {
+            $resultado = $accidenteService->actualizarAccidente($accidenteId, $cabecera, $ediciones);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['status' => 'error', 'message' => implode("\n", $e->validator->errors()->all())]);
+        }
 
         return response()->json([
             'status' => 'success',

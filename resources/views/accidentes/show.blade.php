@@ -7,6 +7,7 @@
     <h1>Datos del Accidente</h1>
 </div>
 <div class="container-fluid">
+    @include('accidentes.partials.alerta-ocupantes')
     <div class="row">
         <div class="col-md-12 text-right">
             <p>

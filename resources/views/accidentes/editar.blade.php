@@ -43,7 +43,7 @@
                 <span class="help-block" v-if="pregunta.instrucciones != ''">@{{ pregunta.instrucciones }}</span>
             </div>
             <div class="col-sm-4">
-                <a href="#" class="btn btn-primary" @click.prevent="guardar()"><i class="fa fa-fw fa-floppy-o"></i> Guardar</a>
+                <a href="#" class="btn btn-primary" @click.prevent="guardar()"><i class="fa fa-fw fa-floppy-o"></i> Preparar cambio</a>
                 <a href="#" class="btn btn-danger" @click.prevent="borrar()" v-if="respuesta != null"><i class="fa fa-fw fa-trash"></i> Borrar</a>
             </div>
         </div>
@@ -64,7 +64,7 @@
                 <img v-if="pregunta.pregunta_id == 33" class="img-responsive img-rounded" style="width: 50%;" src="{{ asset('img/ubicacion-pasajeros.png') }}" />
             </div>
             <div class="col-sm-4">
-                <a href="#" class="btn btn-primary" @click.prevent="guardar()"><i class="fa fa-fw fa-floppy-o"></i> Guardar</a>
+                <a href="#" class="btn btn-primary" @click.prevent="guardar()"><i class="fa fa-fw fa-floppy-o"></i> Preparar cambio</a>
                 <a href="#" class="btn btn-danger" @click.prevent="borrar()" v-if="respuesta != null"><i class="fa fa-fw fa-trash"></i> Borrar</a>
             </div>
         </div>
@@ -90,7 +90,7 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <a href="#" class="btn btn-primary" @click.prevent="guardar()"><i class="fa fa-fw fa-floppy-o"></i> Guardar</a>
+                <a href="#" class="btn btn-primary" @click.prevent="guardar()"><i class="fa fa-fw fa-floppy-o"></i> Preparar cambio</a>
                 <a href="#" class="btn btn-danger" @click.prevent="borrar()" v-if="respuesta != null"><i class="fa fa-fw fa-trash"></i> Borrar</a>
             </div>
         </div>
@@ -116,7 +116,7 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <a href="#" class="btn btn-primary" @click.prevent="guardar()"><i class="fa fa-fw fa-floppy-o"></i> Guardar</a>
+                <a href="#" class="btn btn-primary" @click.prevent="guardar()"><i class="fa fa-fw fa-floppy-o"></i> Preparar cambio</a>
                 <a href="#" class="btn btn-danger" @click.prevent="borrar()" v-if="respuesta != null"><i class="fa fa-fw fa-trash"></i> Borrar</a>
             </div>
         </div>
@@ -137,7 +137,7 @@
                 <span class="help-block" v-if="pregunta.instrucciones != ''">@{{ pregunta.instrucciones }}</span>
             </div>
             <div class="col-sm-4">
-                <a href="#" class="btn btn-primary" @click.prevent="guardar()"><i class="fa fa-fw fa-floppy-o"></i> Guardar</a>
+                <a href="#" class="btn btn-primary" @click.prevent="guardar()"><i class="fa fa-fw fa-floppy-o"></i> Preparar cambio</a>
                 <a href="#" class="btn btn-danger" @click.prevent="borrar()" v-if="respuesta != null"><i class="fa fa-fw fa-trash"></i> Borrar</a>
             </div>
         </div>
@@ -145,6 +145,7 @@
 
     {!! Form::open(['route' => ['accidentes.actualizar', $params['accidente']->id]]) !!}
         <div id="editar-accidente" v-cloak>
+            @include('accidentes.partials.alerta-ocupantes')
             <div class="panel {{ $params['panel_color'] }}">
                 <div class="panel-heading">
                     <h2>{{ $params['subtitle'] }}</h2>
@@ -156,7 +157,7 @@
                             <i class="fa fa-fw fa-circle" v-show="modoEdicion == 'respuestas'"></i>Editar Respuestas
                         </a>
                         <a href="{{ url($params['route']) }}" class="btn btn-default">Cancelar</a>
-                        <a href="#" @click.prevent="guardarCambios()" class="btn btn-primary">Guardar</a>
+                        <a href="#" @click.prevent="guardarCambios()" class="btn btn-primary">Guardar accidente</a>
                     </div>
                 </div>
                 <div class="panel-body" v-show="setEdiciones.length > 0">
@@ -262,6 +263,7 @@
                 </div>
                 <div class="panel-body" v-show="modoEdicion == 'respuestas'">
                     <div class="form-horizontal row-border">
+                        <p class="alert alert-info">Prepare cada cambio con el botón junto a la pregunta. Para agregar una persona, seleccione el grupo de personas, pulse Agregar y prepare sus respuestas. Cuando estén completos el número de ocupantes y las personas, pulse Guardar accidente.</p>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Grupo de Preguntas</label>
                             <div class="col-sm-8">
@@ -275,7 +277,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group" v-show="agrupadores.length > 0">
+                        <div class="form-group" v-show="grupoPreguntaSeleccionado && grupoPreguntaSeleccionado.duplicable">
                             <label class="col-sm-2 control-label">Agrupador</label>
                             <div class="col-sm-8">
                                 <div class="btn-group">
@@ -339,6 +341,7 @@
 @section('after-app-javascript')
     @parent
     <script src="{{ asset('js/editar_accidente.js') }}?v={{ filemtime(public_path('js/editar_accidente.js')) }}"></script>
+    <script src="{{ asset('js/alerta_ocupantes_edicion.js') }}?v={{ filemtime(public_path('js/alerta_ocupantes_edicion.js')) }}"></script>
 @endsection
 
 @section('footer-javascript')
