@@ -299,7 +299,7 @@ window.form70Refresh = function() {
         }
         el.toggle(applies).find('input, select').prop('disabled', !applies);
         if (!applies || values[id]) form70MarkInvalid(el, false);
-        var required = applies && (el.attr('data-required') === '1' || siat.reglas.obligatorias.indexOf(id) >= 0 || (id === 131 && !values[130]));
+        var required = applies && (el.attr('data-required') === '1' || siat.reglas.obligatorias.indexOf(id) >= 0 || (id === 131 && !values[130]) || (id === 141 && values[140] === 'Positivo'));
         el.find('.control-label').toggleClass('required-label', required);
         el.find('input, select').attr('aria-required', required ? 'true' : 'false');
     });
@@ -340,18 +340,18 @@ window.form70Validate = function(section) {
             group.preguntas.forEach(function(q) {
                 var element = $('.form70-question[data-group="'+key+'"][data-question="'+q.pregunta_id+'"]');
                 if (element.find('input, select').first().prop('disabled')) return;
-                var required = q.obligatorio || siat.reglas.obligatorias.indexOf(q.pregunta_id) >= 0 || (q.pregunta_id === 131 && !values[130]);
+                var required = q.obligatorio || siat.reglas.obligatorias.indexOf(q.pregunta_id) >= 0 || (q.pregunta_id === 131 && !values[130]) || (q.pregunta_id === 141 && values[140] === 'Positivo');
                 var invalid = required && !values[q.pregunta_id];
                 form70MarkInvalid(element, !!invalid);
                 if (invalid && !error) error = group.grupo_nombre+': complete '+q.pregunta+'.';
                 if (q.pregunta_id === 125 && values[125]) {
-                    var withoutVehicle = values[125] === '0' && ['Peatón', 'Ciclista'].indexOf(values[135]) >= 0;
+                    var withoutVehicle = values[125] === '0' && values[135] === 'Peatón';
                     var invalidVehicle = !withoutVehicle && !Object.prototype.hasOwnProperty.call(vehicles, values[125]);
                     form70MarkInvalid(element, invalidVehicle);
                     if (invalidVehicle && !error) {
                         error = group.grupo_nombre + ' (persona ' + (group.agrupador + 1) + '): vehículo "' + values[125] +
                             '" inválido para el rol "' + (values[135] || '') + '". Vehículos registrados: ' +
-                            (Object.keys(vehicles).join(', ') || 'ninguno') + '. Use un número registrado; 0 solo para Peatón o Ciclista.';
+                            (Object.keys(vehicles).join(', ') || 'ninguno') + '. Use un número registrado; 0 solo para Peatón.';
                     }
                 }
             });

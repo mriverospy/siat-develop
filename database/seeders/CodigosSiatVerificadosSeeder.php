@@ -36,10 +36,22 @@ class CodigosSiatVerificadosSeeder extends Seeder
                 $textosEsperados = array_keys($opciones);
                 sort($textosActuales);
                 sort($textosEsperados);
-                if ($textosActuales !== $textosEsperados) {
+                // Permitir el catálogo anterior para poder asignar códigos antes
+                // de ejecutar AlinearOpcionesDiccionarioSiatSeeder.
+                $textosAnteriores = $textosEsperados;
+                if (in_array($codigo, ['APY_07', 'P_4', 'P_5'], true)) {
+                    $textosAnteriores = array_values(array_diff($textosAnteriores, ['Se desconoce']));
+                }
+                if ($codigo === 'V_2') {
+                    $textosAnteriores = array_map(fn ($texto) => $texto === 'Vehículo para transporte de mercancías pesado (≥3,5 tn)' ? 'Vehículo para transporte de mercancías pesado (>3,5 tn)' : $texto, $textosAnteriores);
+                }
+                sort($textosAnteriores);
+                if ($textosActuales !== $textosEsperados && $textosActuales !== $textosAnteriores) {
                     throw new RuntimeException("Las opciones de {$codigo} difieren del catálogo verificado.");
                 }
                 foreach ($opciones as $opcion => $valor) {
+                    if ($textosActuales === $textosAnteriores && in_array($codigo, ['APY_07', 'P_4', 'P_5'], true) && $opcion === 'Se desconoce') continue;
+                    if ($textosActuales === $textosAnteriores && $codigo === 'V_2' && $opcion === 'Vehículo para transporte de mercancías pesado (≥3,5 tn)') $opcion = 'Vehículo para transporte de mercancías pesado (>3,5 tn)';
                     $detalles = DB::table('preguntas_detalles')->where('pregunta_id', $pregunta->id)
                         ->lockForUpdate()->get()->filter(fn ($d) => $d->opcion === $opcion && $d->activo);
                     if ($detalles->count() !== 1) {

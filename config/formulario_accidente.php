@@ -17,7 +17,7 @@ return [
         136 => ['roles' => ['Pasajero']],
         137 => ['roles' => ['Conductor', 'Pasajero', 'Ciclista'], 'vehiculos' => ['Bicicleta', 'Motocicleta', 'Motocarro']],
         138 => ['roles' => ['Conductor', 'Pasajero'], 'vehiculos' => ['Motocicleta', 'Motocarro']],
-        139 => ['roles' => ['Conductor', 'Pasajero'], 'vehiculos' => ['Automóvil', 'Camioneta o furgón', 'Autobús (transporte público, viajes turísticos, etc.).', 'Vehículo para transporte de mercancías ligero (<3,5 tn)', 'Vehículo para transporte de mercancías pesado (>3,5 tn)']],
+        139 => ['roles' => ['Conductor', 'Pasajero'], 'vehiculos' => ['Automóvil', 'Camioneta o furgón', 'Autobús (transporte público, viajes turísticos, etc.).', 'Vehículo para transporte de mercancías ligero (<3,5 tn)', 'Vehículo para transporte de mercancías pesado (>3,5 tn)', 'Vehículo para transporte de mercancías pesado (≥3,5 tn)']],
         140 => ['roles' => ['Conductor']],
         141 => ['roles' => ['Conductor'], 'pregunta' => 140, 'valores' => ['Positivo']],
         142 => ['roles' => ['Conductor']],

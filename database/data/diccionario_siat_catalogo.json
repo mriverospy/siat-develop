@@ -70,7 +70,8 @@
       "Pérdida de dirección": "6",
       "Pérdida de rueda": "7",
       "Rotura de parabrisas": "8",
-      "No hubo factor vehículo interviniente": "9"
+      "No hubo factor vehículo interviniente": "9",
+      "Se desconoce": "99"
     }
   },
   {
@@ -146,7 +147,7 @@
       "Camioneta o furgón": "31",
       "Autobús (transporte público, viajes turísticos, etc.).": "4",
       "Vehículo para transporte de mercancías ligero (<3,5 tn)": "5",
-      "Vehículo para transporte de mercancías pesado (>3,5 tn)": "6",
+      "Vehículo para transporte de mercancías pesado (≥3,5 tn)": "6",
       "Carreta/Animal": "7",
       "Vehículo de movilidad personal (patinete eléctrico, segway.)": "8",
       "Otro tipo de vehículo motorizado": "9",
@@ -248,7 +249,8 @@
     "codigo": "P_4",
     "opciones": {
       "Masculino": "1",
-      "Femenino": "2"
+      "Femenino": "2",
+      "Se desconoce": "99"
     }
   },
   {
@@ -257,7 +259,8 @@
     "codigo": "P_5",
     "opciones": {
       "Paraguayo": "1",
-      "Extranjero": "2"
+      "Extranjero": "2",
+      "Se desconoce": "99"
     }
   },
   {

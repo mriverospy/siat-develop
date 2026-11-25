@@ -62,7 +62,7 @@ class ConsistenciaOcupantes
                 $cantidad = $numero($grupo[$ocupantes->id] ?? null);
                 if ($n === null || $n === '0') $error($vehiculo, 'Indique un número válido para cada vehículo.');
                 elseif (isset($vehiculos[$n])) $error($vehiculo, 'El número de vehículo '.$n.' está repetido.');
-                elseif ($cantidad === null) $error($ocupantes, 'Vehículo '.$n.': indique un número válido de ocupantes.');
+                elseif ($cantidad === null || $cantidad === '0') $error($ocupantes, 'Vehículo '.$n.': indique un número de ocupantes mayor que cero.');
                 else $vehiculos[$n] = ['declarados' => $cantidad, 'personas' => 0];
             }
             if ($hayPersona) {

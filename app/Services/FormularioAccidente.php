@@ -97,9 +97,10 @@ class FormularioAccidente
                 $value = self::valor($group[$id] ?? '');
                 $required = $q->obligatorio || in_array($id, config('formulario_accidente.obligatorias'));
                 if ($id === 131 && self::valor($group[130] ?? '') === '') $required = true;
+                if ($id === 141 && self::valor($group[140] ?? '') === 'Positivo') $required = true;
                 if ($required && $value === '') $error($id, "Grupo $key: {$q->pregunta} es obligatorio.");
                 if ($value === '') continue;
-                if ($id === 141 && !preg_match('/^\d+(?:\.\d{1,2})?$/D', $value)) {
+                if ($id === 141 && !preg_match('/^\d+(?:[.,]\d{1,2})?$/D', $value)) {
                     $error($id, "{$q->pregunta}: ingrese un número no negativo con hasta dos decimales.");
                 }
                 $values = is_array($group[$id]) ? $group[$id] : [$group[$id]];
@@ -119,12 +120,16 @@ class FormularioAccidente
                     if ($q->tipo === 'date' && Validator::make(['date' => $v], ['date' => 'date_format:Y-m-d'])->fails()) $error($id, "{$q->pregunta}: fecha inválida.");
                 }
                 if (in_array($id, [115,116,123,125,131]) && (!ctype_digit($value) || ($id === 115 && (int)$value < 1))) $error($id, "{$q->pregunta}: ingrese un entero válido.");
+                if ($id === 131 && ctype_digit($value) && (int) $value > 120 && (int) $value !== 999) $error($id, "{$q->pregunta}: ingrese una edad entre 0 y 120, o 999 si se desconoce.");
                 if ($id === 125) {
                     $role = self::valor($group[135] ?? '');
-                    $withoutVehicle = $value === '0' && in_array($role, ['Peatón', 'Ciclista'], true);
+                    $historicoSinCambio = $value === '0' && $role === 'Ciclista'
+                        && self::valor($originales[$key][125] ?? '') === '0'
+                        && self::valor($originales[$key][135] ?? '') === 'Ciclista';
+                    $withoutVehicle = $value === '0' && ($role === 'Peatón' || $historicoSinCambio);
                     if (!$withoutVehicle && !isset($vehicles[$value])) {
                         $available = implode(', ', array_keys($vehicles)) ?: 'ninguno';
-                        $error($id, "Grupo $key: vehículo '$value' inválido para el rol '$role'. Vehículos registrados: $available. Seleccione un número registrado; 0 solo se permite para Peatón o Ciclista.");
+                        $error($id, "Grupo $key: vehículo '$value' inválido para el rol '$role'. Vehículos registrados: $available. Seleccione un número registrado; 0 solo se permite para Peatón.");
                     }
                 }
             }
